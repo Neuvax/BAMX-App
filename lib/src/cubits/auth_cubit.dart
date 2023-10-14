@@ -4,17 +4,16 @@ import 'package:bamx_app/main.dart';
 import 'package:bamx_app/src/repository/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum AuthState {
-  initial,
+enum CurrentAuthState {
   signedIn,
   signedOut,
 }
 
-class AuthCubit extends Cubit<AuthState> {
+class AuthCubit extends Cubit<CurrentAuthState> {
   final AuthRepository _authRepository = getIt();
   StreamSubscription? _authSubscription;
 
-  AuthCubit() : super(AuthState.initial);
+  AuthCubit() : super(CurrentAuthState.signedOut);
 
   /// Initializes the cubit and listens to the authentication state changes.
   Future<void> init() async {
@@ -23,16 +22,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   void _authStateChanged(String? userUID) {
     if (userUID != null) {
-      emit(AuthState.signedIn);
+      emit(CurrentAuthState.signedIn);
     } else {
-      emit(AuthState.signedOut);
+      emit(CurrentAuthState.signedOut);
     }
   }
 
   /// Signs out the current user.
   Future<void> signOut() async {
     await _authRepository.signOut();
-    emit(AuthState.signedOut);
+    emit(CurrentAuthState.signedOut);
   }
 
   @override

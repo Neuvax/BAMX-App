@@ -4,11 +4,16 @@ PODS:
     - firebase_core
     - Flutter
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - desktop_webview_auth (0.0.1):
+    - Flutter
   - Firebase/Auth (10.15.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 10.15.0)
   - Firebase/CoreOnly (10.15.0):
     - FirebaseCore (= 10.15.0)
+  - Firebase/DynamicLinks (10.15.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 10.15.0)
   - Firebase/Firestore (10.15.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.15.0)
@@ -18,6 +23,10 @@ PODS:
     - Flutter
   - firebase_core (2.17.0):
     - Firebase/CoreOnly (= 10.15.0)
+    - Flutter
+  - firebase_dynamic_links (5.3.7):
+    - Firebase/DynamicLinks (= 10.15.0)
+    - firebase_core
     - Flutter
   - FirebaseAppCheckInterop (10.16.0)
   - FirebaseAuth (10.15.0):
@@ -33,6 +42,8 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreInternal (10.16.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
+  - FirebaseDynamicLinks (10.15.0):
+    - FirebaseCore (~> 10.0)
   - FirebaseFirestore (10.15.0):
     - FirebaseFirestore/AutodetectLeveldb (= 10.15.0)
   - FirebaseFirestore/AutodetectLeveldb (10.15.0):
@@ -68,8 +79,10 @@ PODS:
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
+  - desktop_webview_auth (from `.symlinks/plugins/desktop_webview_auth/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.15.0`)
   - Flutter (from `Flutter`)
 
@@ -80,6 +93,7 @@ SPEC REPOS:
     - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreInternal
+    - FirebaseDynamicLinks
     - GoogleUtilities
     - GTMSessionFetcher
     - nanopb
@@ -89,10 +103,14 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
+  desktop_webview_auth:
+    :path: ".symlinks/plugins/desktop_webview_auth/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_dynamic_links:
+    :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   FirebaseFirestore:
     :git: https://github.com/invertase/firestore-ios-sdk-frameworks.git
     :tag: 10.15.0
@@ -106,13 +124,16 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   cloud_firestore: 9c9fb3500360c9b338e9eb2fec40b38e7a004cac
+  desktop_webview_auth: d645139460ef203d50bd0cdb33356785dd939cce
   Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
   firebase_auth: b62e99e6ece589afe88ebe8919eb9563b52c384c
   firebase_core: 28e84c2a4fcf6a50ef83f47b145ded8c1fa331e4
+  firebase_dynamic_links: 52f5d054c676061cf17f4390f3bad9cc964cfdeb
   FirebaseAppCheckInterop: 82358cff9f33452dd44259e88eea5e562500b1cb
   FirebaseAuth: a55ec5f7f8a5b1c2dd750235c1bb419bfb642445
   FirebaseCore: 2cec518b43635f96afe7ac3a9c513e47558abd2e
   FirebaseCoreInternal: 26233f705cc4531236818a07ac84d20c333e505a
+  FirebaseDynamicLinks: 206d4ed3efd2b722822598017f3980d9fda89815
   FirebaseFirestore: 58d92e3cc19fd1c93e279d466aaf148ce6dbf635
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084

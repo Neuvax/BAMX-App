@@ -1,9 +1,11 @@
+import 'package:bamx_app/src/pages/home_page.dart';
+import 'package:bamx_app/src/pages/sign_in.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
   /// Route names
-  static const String home = '/';
-  static const String login = '/login';
+  static const String login = '/';
+  static const String home = '/home';
 
   /// Route generator
   static Route routes(RouteSettings settings) {
@@ -12,9 +14,9 @@ class Routes {
     }
     switch (settings.name) {
       case home:
-        return buildRoute(const Placeholder());
+        return buildRoute(const HomePage());
       case login:
-        return buildRoute(const Placeholder());
+        return buildRoute(const SignInPage());
       default:
         throw Exception('La ruta: ${settings.name} no existe');
     }
