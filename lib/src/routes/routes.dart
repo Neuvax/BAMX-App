@@ -16,7 +16,7 @@ class Routes {
       case login:
         return buildRoute(const Placeholder());
       default:
-        return buildRoute(const Placeholder());
+        throw Exception('La ruta: ${settings.name} no existe');
     }
   }
 }
