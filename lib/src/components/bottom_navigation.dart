@@ -4,28 +4,31 @@ import 'package:flutter/material.dart';
 class BottomNavigation extends StatefulWidget {
   final int currentIndex;
   final void Function(int) onTap;
-  const BottomNavigation({required this.currentIndex, required this.onTap,super.key});
+  const BottomNavigation(
+      {required this.currentIndex, required this.onTap, super.key});
 
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  final _icons = [(Icons.home, "Principal"), (Icons.favorite_border, "Donaciones"), (Icons.history, "Historial"), (Icons.star_border, "Recompensas")];
+  final _icons = [
+    (Icons.home, "Principal"),
+    (Icons.favorite_border, "Donaciones"),
+    (Icons.history, "Historial"),
+    (Icons.star_border, "Recompensas")
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    return Container(
       decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 10,
-            spreadRadius: 1,
-            offset: Offset(0, -1),
-          ),
-        ],
-      ),
+          border: Border(
+        top: BorderSide(
+          color: MyColors.accent,
+          width: 0.2,
+        ),
+      )),
       child: BottomNavigationBar(
         elevation: 0,
         currentIndex: widget.currentIndex,
@@ -33,9 +36,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
         unselectedItemColor: MyColors.accent,
         selectedItemColor: MyColors.primary,
         iconSize: 27.0,
-        items: List.generate(_icons.length, (index) => 
-          BottomNavigationBarItem(icon: Icon(_icons[index].$1), label: _icons[index].$2)
-        ),
+        items: List.generate(
+            _icons.length,
+            (index) => BottomNavigationBarItem(
+                icon: Icon(_icons[index].$1), label: _icons[index].$2)),
       ),
     );
   }

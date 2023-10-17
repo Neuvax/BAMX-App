@@ -1,3 +1,4 @@
+import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/components/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
@@ -18,9 +19,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BAMX'),
-      ),
+      appBar: const MyAppBar(),
       body: const Center(child: Text('Home Page')),
       bottomNavigationBar: BottomNavigation(currentIndex: _currentIndex, onTap: onBottomTap)
     );
