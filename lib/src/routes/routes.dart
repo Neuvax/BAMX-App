@@ -1,4 +1,4 @@
-import 'package:bamx_app/src/pages/home_page.dart';
+import 'package:bamx_app/src/pages/layout_page.dart';
 import 'package:bamx_app/src/pages/sign_in.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class Routes {
     }
     switch (settings.name) {
       case home:
-        return buildRoute(const HomePage());
+        return buildRoute(const LayoutPage());
       case login:
         return buildRoute(const SignInPage());
       default:

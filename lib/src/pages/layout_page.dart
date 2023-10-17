@@ -2,14 +2,14 @@ import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/components/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class LayoutPage extends StatefulWidget {
+  const LayoutPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<LayoutPage> createState() => _LayoutPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _LayoutPageState extends State<LayoutPage> {
   int _currentIndex = 0;
   void onBottomTap(int index) {
     setState(() {
