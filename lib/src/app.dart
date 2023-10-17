@@ -1,6 +1,7 @@
 
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/routes/routes.dart';
+import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'BAMX App',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: MyColors.primary),
           useMaterial3: true,
         ),
         onGenerateRoute: Routes.routes,
