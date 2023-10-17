@@ -1,28 +1,28 @@
-import 'package:bamx_app/src/cubits/auth_cubit.dart';
+import 'package:bamx_app/src/components/bottom_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
+  void onBottomTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Bienvenido a BAMX'),
-            const SizedBox(height: 20),
-            const Text('Esta es la página principal'),
-            ElevatedButton(
-                onPressed: () {
-                  context.read<AuthCubit>().signOut();
-                },
-                child: const Text('Cerrar sesión'))
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text('BAMX'),
       ),
+      body: const Center(child: Text('Home Page')),
+      bottomNavigationBar: BottomNavigation(currentIndex: _currentIndex, onTap: onBottomTap)
     );
   }
 }
