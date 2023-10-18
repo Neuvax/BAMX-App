@@ -31,15 +31,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.shopping_cart_outlined),
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.cart);
-                  },
+                  onPressed: () => Navigator.pushNamed(context, Routes.cart),
                   color: MyColors.accent,
                   iconSize: 27.0,
                 ),
                 IconButton(
                   icon: const Icon(Icons.person),
-                  onPressed: () {},
+                  onPressed: () => Navigator.pushNamed(context, Routes.userProfile),
                   color: MyColors.accent,
                   iconSize: 27.0,
                 )
