@@ -1,3 +1,4 @@
+import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.shopping_cart_outlined),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.cart);
+                  },
                   color: MyColors.accent,
                   iconSize: 27.0,
                 ),
