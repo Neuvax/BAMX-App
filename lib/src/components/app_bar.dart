@@ -29,32 +29,25 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         width: 0.2,
       ))),
       child: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Image.asset(
-              "assets/images/bamx_logo.png",
-              fit: BoxFit.cover,
-              height: 40,
-            ),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.shopping_cart_outlined),
-                  onPressed: () => navigateToRoute(context, Routes.cart),
-                  color: MyColors.accent,
-                  iconSize: 27.0,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.person),
-                  onPressed: () => navigateToRoute(context, Routes.userProfile),
-                  color: MyColors.accent,
-                  iconSize: 27.0,
-                )
-              ],
-            )
-          ],
+        title: Image.asset(
+          "assets/images/bamx_logo.png",
+          fit: BoxFit.cover,
+          height: 40,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart_outlined),
+            onPressed: () => navigateToRoute(context, Routes.cart),
+            color: MyColors.accent,
+            iconSize: 27.0,
+          ),
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () => navigateToRoute(context, Routes.userProfile),
+            color: MyColors.accent,
+            iconSize: 27.0,
+          )
+        ],
       ),
     );
   }
