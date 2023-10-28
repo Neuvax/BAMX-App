@@ -15,10 +15,13 @@ class FirebaseDataSource {
 
   ///Get all documents from the collection "items"
   Stream<Iterable<ItemDonacion>> getItems() {
-    return firestore.collection('items').snapshots().map((snapshot) {
-      return snapshot.docs
+    return firestore.collection('items')
+      .orderBy('prioridad', descending: true)
+      .snapshots()
+      .map((snapshot) {
+        return snapshot.docs
           .map((doc) => ItemDonacion.fromMap(doc.id, doc.data()))
           .toList(); // Convertir a lista
-    });
+      });
   }
 }

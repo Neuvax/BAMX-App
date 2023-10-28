@@ -26,7 +26,7 @@ class DonationsPage extends StatelessWidget {
           } else {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DonationsList(title: "Otras Donaciones",state: state),
+              child: DonationsList(title: "Víveres para donar",state: state),
             );
           }
         },
