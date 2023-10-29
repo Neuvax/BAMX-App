@@ -1,4 +1,5 @@
 import 'package:bamx_app/src/components/app_bar.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 
 class UserProfilePage extends StatelessWidget {
@@ -8,9 +9,9 @@ class UserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: MyAppBar(),
-      body: Center(
-        child: Text('User Profile Page'),
-      ),
+      body: ProfileScreen(
+        avatarSize: 100,
+      )
     );
   }
 }
