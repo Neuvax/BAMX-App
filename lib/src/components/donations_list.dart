@@ -7,7 +7,8 @@ class DonationsList extends StatelessWidget {
   final ListaDonacionesState state;
   final String title;
 
-  const DonationsList({Key? key, required this.title, required this.state}) : super(key: key);
+  const DonationsList({Key? key, required this.title, required this.state})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +39,24 @@ class DonationsList extends StatelessWidget {
                   title: Text(itemDonacion.nombre),
                   subtitle: Text("Cantidad: 1 ${itemDonacion.unidad}"),
                   trailing: IconButton(
-                    onPressed: () { 
-                     BlocProvider.of<ListaDonacionesCubit>(context).addItemToCart(itemDonacion);
+                    onPressed: () {
+                      BlocProvider.of<ListaDonacionesCubit>(context)
+                          .addItemToCart(itemDonacion);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: <Widget>[
+                              const Icon(Icons.check, color: Colors.white),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                child: Text('${itemDonacion.nombre} agregado al carrito', style: const TextStyle(color: Colors.white)),
+                              ),
+                            ],
+                          ),
+                          duration: const Duration(seconds: 2),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
                     },
                     icon: const Icon(Icons.add_shopping_cart),
                     color: Colors.green,
