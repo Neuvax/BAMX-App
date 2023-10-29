@@ -1,5 +1,7 @@
+import 'package:bamx_app/src/cubits/cart_cubit.dart';
 import 'package:bamx_app/src/cubits/donaciones_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DonationsList extends StatelessWidget {
   final ListaDonacionesState state;
@@ -36,7 +38,9 @@ class DonationsList extends StatelessWidget {
                   title: Text(itemDonacion.nombre),
                   subtitle: Text("Cantidad: 1 ${itemDonacion.unidad}"),
                   trailing: IconButton(
-                    onPressed: () { },
+                    onPressed: () { 
+                     BlocProvider.of<ListaDonacionesCubit>(context).addItemToCart(itemDonacion);
+                    },
                     icon: const Icon(Icons.add_shopping_cart),
                     color: Colors.green,
                   ),

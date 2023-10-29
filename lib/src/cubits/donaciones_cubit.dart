@@ -22,6 +22,10 @@ class ListaDonacionesCubit extends Cubit<ListaDonacionesState> {
     ));
   }
 
+  Future<void> addItemToCart(ItemDonacion item) async {
+    await _itemDonacionRepository.addItemToCart(item);
+  }
+
   @override
   Future<void> close() {
     _itemsDonacionesSubscription?.cancel();

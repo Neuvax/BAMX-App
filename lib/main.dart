@@ -2,7 +2,9 @@ import 'package:bamx_app/src/app.dart';
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/data-source/firebase_data_source.dart';
 import 'package:bamx_app/src/repository/auth_repository.dart';
+import 'package:bamx_app/src/repository/cart_repository.dart';
 import 'package:bamx_app/src/repository/implementations/auth_repository.dart';
+import 'package:bamx_app/src/repository/implementations/cart_repository.dart';
 import 'package:bamx_app/src/repository/implementations/item_donacion_repository.dart';
 import 'package:bamx_app/src/repository/item_donacion_repository.dart';
 import 'package:flutter/material.dart';
@@ -32,4 +34,5 @@ Future<void> injectDependencies() async {
 
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImp());
   getIt.registerLazySingleton<ItemDonacionRepository>(() => ItemDonacionRepositoryImp());
+  getIt.registerLazySingleton<CartRepository>(() => CartRepositoryImp());
 }

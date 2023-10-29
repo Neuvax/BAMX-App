@@ -11,4 +11,9 @@ class ItemDonacionRepositoryImp extends ItemDonacionRepository {
   Stream<Iterable<ItemDonacion>> getItems() {
     return _firebaseDataSource.getItems();
   }
+
+  @override
+  Future<void> addItemToCart(ItemDonacion item) {
+    return _firebaseDataSource.addItemToCart(item);
+  }
 }
