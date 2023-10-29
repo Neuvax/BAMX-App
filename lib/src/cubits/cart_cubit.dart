@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bamx_app/main.dart';
 import 'package:bamx_app/src/model/cart_item.dart';
-import 'package:bamx_app/src/model/item_donacion.dart';
 import 'package:bamx_app/src/repository/cart_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
