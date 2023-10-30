@@ -36,7 +36,7 @@ class DonationsList extends StatelessWidget {
                 child: ListTile(
                   leading: Image.network(itemDonacion.imagen),
                   title: Text(itemDonacion.nombre),
-                  subtitle: Text("Cantidad: 1 ${itemDonacion.unidad}"),
+                  subtitle: Text("Unidad: ${itemDonacion.unidad}"),
                   trailing: IconButton(
                     onPressed: () {
                       BlocProvider.of<ListaDonacionesCubit>(context)
