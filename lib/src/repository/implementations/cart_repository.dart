@@ -10,4 +10,9 @@ class CartRepositoryImp extends CartRepository {
   Stream<Iterable<CartItem>> getUserCart() {
     return _firebaseDataSource.getUserCart();
   }
+
+  @override
+  Future<void> removeItemFromCart(String itemId) async {
+    await _firebaseDataSource.removeItemFromCart(itemId);
+  }
 }

@@ -39,7 +39,7 @@ class CartPage extends StatelessWidget {
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () {
-                            
+                            context.read<CartCubit>().removeItem(cartItemsList[index].item.id);
                           },
                         ),
                       ),

@@ -63,4 +63,16 @@ class FirebaseDataSource {
       });
     }).asyncMap((event) => Future.wait(event));
   }
+
+  ///Remove item from user's cart
+  Future<void> removeItemFromCart(String itemId) async {
+    final user = currentUser;
+    final cart = await firestore.collection('carts').doc(user.uid).get();
+    final cartItems = cart.data()?['items'] as List<dynamic>? ?? [];
+    final itemIndex = cartItems.indexWhere((element) => element['id'] == itemId);
+    cartItems.removeAt(itemIndex);
+    await firestore.collection('carts').doc(user.uid).set({
+      'items': cartItems,
+    });
+  }
 }

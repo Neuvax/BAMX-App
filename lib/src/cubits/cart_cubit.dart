@@ -23,13 +23,15 @@ class CartCubit extends Cubit<CartState> {
     ));
   }
 
+  Future<void> removeItem(String itemId) async {
+    await _cartRepository.removeItemFromCart(itemId);
+  }
+
   @override
   Future<void> close() {
     _cartSubscription?.cancel();
     return super.close();
   }
-
-  
 }
 
 class CartState extends Equatable {
