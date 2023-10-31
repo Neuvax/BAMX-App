@@ -51,22 +51,23 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       if (state.cartItems.isNotEmpty && !state.isLoading)
                         Positioned(
-                          right: 0,
+                          right: 3,
+                          top: 3,
                           child: Container(
                             padding: const EdgeInsets.all(1),
                             decoration: BoxDecoration(
                               color: Colors.red,
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             constraints: const BoxConstraints(
-                              minWidth: 12,
-                              minHeight: 12,
+                              minWidth: 16,
+                              minHeight: 16,
                             ),
                             child: Text(
                               '${state.cartItems.length}',
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 8,
+                                fontSize: 10,
                               ),
                               textAlign: TextAlign.center,
                             ),

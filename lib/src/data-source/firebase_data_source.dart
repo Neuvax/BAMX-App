@@ -14,15 +14,28 @@ class FirebaseDataSource {
 
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
 
-  ///Get all documents from the collection "items"
-  Stream<Iterable<ItemDonacion>> getItems() {
+  ///Get documents from the collection "items" where the field "prioridad" is greater than 1
+  Stream<Iterable<ItemDonacion>> getPriorityItems() {
     return firestore.collection('items')
+      .where('prioridad', isGreaterThan: 0)
       .orderBy('prioridad', descending: true)
       .snapshots()
       .map((snapshot) {
         return snapshot.docs
           .map((doc) => ItemDonacion.fromMap(doc.id, doc.data()))
-          .toList(); // Convertir a lista
+          .toList(); // Convert to list
+      });
+  }
+
+  ///Get documents from the collection "items" where the field "prioridad" is equal to 0
+  Stream<Iterable<ItemDonacion>> getNormalItems() {
+    return firestore.collection('items')
+      .where('prioridad', isEqualTo: 0)
+      .snapshots()
+      .map((snapshot) {
+        return snapshot.docs
+          .map((doc) => ItemDonacion.fromMap(doc.id, doc.data()))
+          .toList(); // Convert to list
       });
   }
 
