@@ -8,8 +8,13 @@ class ItemDonacionRepositoryImp extends ItemDonacionRepository {
   final FirebaseDataSource _firebaseDataSource = getIt();
 
   @override
-  Stream<Iterable<ItemDonacion>> getItems() {
-    return _firebaseDataSource.getItems();
+  Stream<Iterable<ItemDonacion>> getPriorityItems() {
+    return _firebaseDataSource.getPriorityItems();
+  }
+
+  @override
+  Stream<Iterable<ItemDonacion>> getNormalItems() {
+    return _firebaseDataSource.getNormalItems();
   }
 
   @override
