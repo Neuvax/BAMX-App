@@ -48,9 +48,7 @@ class DonationsPage extends StatelessWidget {
             ),
             BlocBuilder<ListaDonacionesPrioritariasCubit,
                 ListaDonacionesState>(
-              builder: (context, state) {
-                return DonationList(state: state,);
-              },
+              builder: (context, state) => DonationList(state: state),
             ),
             const SliverToBoxAdapter(
               child: Padding(
@@ -65,9 +63,7 @@ class DonationsPage extends StatelessWidget {
               ),
             ),
             BlocBuilder<ListaDonacionesCubit, ListaDonacionesState>(
-              builder: (context, state) {
-                return DonationList(state: state,);
-              },
+              builder: (context, state) => DonationList(state: state),
             ),
           ],
         ),
