@@ -1,6 +1,7 @@
 import 'package:bamx_app/src/cubits/donaciones_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DonationList extends StatelessWidget {
   final ListaDonacionesState state;
@@ -10,9 +11,42 @@ class DonationList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state.isLoading) {
-      return const SliverToBoxAdapter(
-        child: Center(
-          child: CircularProgressIndicator(),
+      return SliverToBoxAdapter(
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: 3,
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ListTile(
+                  leading: Container(
+                    width: 50,
+                    height: 50,
+                    color: Colors.white,
+                  ),
+                  title: Container(
+                    width: 100,
+                    height: 20,
+                    color: Colors.white,
+                  ),
+                  subtitle: Container(
+                    width: 50,
+                    height: 20,
+                    color: Colors.white,
+                  ),
+                  trailing: Container(
+                    width: 50,
+                    height: 50,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            },
+          )
         ),
       );
     } else if (state.listaItemsDonaciones.isEmpty) {
