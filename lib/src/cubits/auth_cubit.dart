@@ -66,9 +66,9 @@ class AuthCubit extends Cubit<CurrentAuthState> {
   }
 
   /// Signs up the user with email and password and throws an error if the sign up fails.
-  Future<void> signUpWithEmailAndPassword(String email, String password, String confirmPassword) async {
-    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      emit(const CurrentAuthState(Status.error, 'El correo electrónico y contraseña son requeridos.'));
+  Future<void> signUpWithEmailAndPassword(String name, String email, String password, String confirmPassword) async {
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      emit(const CurrentAuthState(Status.error, 'Todos los campos son requeridos.'));
       return;
     } else if (password != confirmPassword) {
       emit(const CurrentAuthState(Status.error, 'Las contraseñas no coinciden.'));
@@ -93,7 +93,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
 
     try {
-      await _authRepository.signUpWithEmailAndPassword(email, password);
+      await _authRepository.signUpWithEmailAndPassword(name, email, password);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'email-already-in-use':

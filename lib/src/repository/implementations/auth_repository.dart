@@ -21,8 +21,9 @@ class AuthRepositoryImp extends AuthRepository {
   }
 
   @override
-  Future<void> signUpWithEmailAndPassword(String email, String password) async {
+  Future<void> signUpWithEmailAndPassword(String name, String email, String password) async {
     await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    await _firebaseAuth.currentUser?.updateDisplayName(name);
   }
 
   /// Signs out the current user from Firebase.

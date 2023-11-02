@@ -9,6 +9,7 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final nameController = TextEditingController();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
@@ -42,6 +43,20 @@ class SignUpPage extends StatelessWidget {
                           return const SizedBox.shrink();
                         }
                       },
+                    ),
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 20.0), // Add this
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                        ),
+                        labelText: 'Nombre',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     TextField(
                       controller: emailController,
@@ -90,6 +105,7 @@ class SignUpPage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         context.read<AuthCubit>().signUpWithEmailAndPassword(
+                            nameController.text,
                             emailController.text,
                             passwordController.text,
                             confirmPasswordController.text);
