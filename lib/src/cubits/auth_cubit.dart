@@ -9,6 +9,7 @@ enum Status {
   signedIn,
   signedOut,
   error,
+  success,
 }
 
 class CurrentAuthState {
@@ -125,6 +126,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
     try {
       await _authRepository.sendPasswordResetEmail(email);
+      emit(const CurrentAuthState(Status.success, 'Se envió un correo de recuperación a su cuenta.'));
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':

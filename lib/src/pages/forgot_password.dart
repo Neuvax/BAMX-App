@@ -66,7 +66,17 @@ class ForgotPasswordPage extends StatelessWidget {
                               style: const TextStyle(color: Colors.red),
                             ),
                           );
-                        } else {
+                        } else if (state.status == Status.success) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              "Se ha enviado un correo de recuperación a ${emailController.text}",
+                              style: const TextStyle(color: MyColors.green),
+                            ),
+                          );
+                        }
+                        else {
                           return const SizedBox.shrink();
                         }
                       },
