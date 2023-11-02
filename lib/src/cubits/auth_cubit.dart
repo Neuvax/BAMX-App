@@ -76,7 +76,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
 
     if (password.length < 10) {
-      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos 12 caracteres.'));
+      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos 10 caracteres.'));
       return;
     } else if (!password.contains(RegExp(r'[A-Z]'))) {
       emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos una letra mayúscula.'));
