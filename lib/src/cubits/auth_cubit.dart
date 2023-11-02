@@ -39,6 +39,10 @@ class AuthCubit extends Cubit<CurrentAuthState> {
 
   /// Signs in the user with email and password and throws an error if the sign in fails.
   Future<void> signInWithEmailAndPassword(String email, String password) async {
+    if (email.isEmpty || password.isEmpty) {
+      emit(const CurrentAuthState(Status.error, 'El correo electrónico y contraseña son requeridos.'));
+      return;
+    }
     try {
       await _authRepository.signInWithEmailAndPassword(email, password);
     } on FirebaseAuthException catch (e) {
