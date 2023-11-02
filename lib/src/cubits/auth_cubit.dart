@@ -65,6 +65,52 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
   }
 
+  /// Signs up the user with email and password and throws an error if the sign up fails.
+  Future<void> signUpWithEmailAndPassword(String email, String password, String confirmPassword) async {
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      emit(const CurrentAuthState(Status.error, 'El correo electrónico y contraseña son requeridos.'));
+      return;
+    } else if (password != confirmPassword) {
+      emit(const CurrentAuthState(Status.error, 'Las contraseñas no coinciden.'));
+      return;
+    }
+
+    if (password.length < 10) {
+      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos 12 caracteres.'));
+      return;
+    } else if (!password.contains(RegExp(r'[A-Z]'))) {
+      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos una letra mayúscula.'));
+      return;
+    } else if (!password.contains(RegExp(r'[a-z]'))) {
+      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos una letra minúscula.'));
+      return;
+    } else if (!password.contains(RegExp(r'[0-9]'))) {
+      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos un número.'));
+      return;
+    } else if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos un caracter especial.'));
+      return;
+    }
+
+    try {
+      await _authRepository.signUpWithEmailAndPassword(email, password);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          emit(const CurrentAuthState(Status.error, 'Error al registrar la cuenta.'));
+          break;
+        case 'invalid-email':
+          emit(const CurrentAuthState(Status.error, 'El correo electrónico o contraseña no son válidos.'));
+          break;
+        default:
+          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          break;
+      }
+    } catch (e) {
+      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+    }
+  }
+
   /// Signs out the current user.
   Future<void> signOut() async {
     await _authRepository.signOut();

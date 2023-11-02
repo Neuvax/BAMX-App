@@ -89,8 +89,10 @@ class SignUpPage extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // context.read<AuthCubit>().signInWithEmailAndPassword(
-                        //     emailController.text, passwordController.text);
+                        context.read<AuthCubit>().signUpWithEmailAndPassword(
+                            emailController.text,
+                            passwordController.text,
+                            confirmPasswordController.text);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MyColors.primary,
@@ -125,10 +127,9 @@ class SignUpPage extends StatelessWidget {
                       height: 20,
                     ),
                     const GoogleSignInButton(
-                      loadingIndicator: CircularProgressIndicator(),
-                      clientId:
-                          "773494367421-oggkhjsdg0b29fgluid0ammb2hnr7tfe.apps.googleusercontent.com")
-
+                        loadingIndicator: CircularProgressIndicator(),
+                        clientId:
+                            "773494367421-oggkhjsdg0b29fgluid0ammb2hnr7tfe.apps.googleusercontent.com")
                   ],
                 ),
               )
