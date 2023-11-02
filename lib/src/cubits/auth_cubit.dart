@@ -87,7 +87,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     } else if (!password.contains(RegExp(r'[0-9]'))) {
       emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos un número.'));
       return;
-    } else if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+    } else if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>\-_]'))) {
       emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos un caracter especial.'));
       return;
     }
