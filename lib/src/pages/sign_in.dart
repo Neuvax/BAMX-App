@@ -130,6 +130,7 @@ class SignInPage extends StatelessWidget {
                   ),
                   //Sign in with Google
                   GoogleSignInButton(
+                    label: 'Iniciar sesión con Google',
                     loadingIndicator: const CircularProgressIndicator(),
                     clientId: googleSignInId,
                   )
