@@ -31,9 +31,13 @@ class SignInPage extends StatelessWidget {
                     return BlocBuilder<AuthCubit, CurrentAuthState>(
                       builder: (context, state) {
                         if (state.status == Status.error) {
-                          return Text(
-                            state.errorMessage ?? "",
-                            style: const TextStyle(color: Colors.red),
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              state.errorMessage ?? "",
+                              style: const TextStyle(color: Colors.red),
+                            ),
                           );
                         } else {
                           return const SizedBox.shrink();
