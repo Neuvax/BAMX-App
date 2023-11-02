@@ -1,12 +1,14 @@
 import 'package:bamx_app/src/pages/cart_page.dart';
 import 'package:bamx_app/src/pages/layout_page.dart';
 import 'package:bamx_app/src/pages/sign_in.dart';
+import 'package:bamx_app/src/pages/sign_up.dart';
 import 'package:bamx_app/src/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
   /// Route names
   static const String login = '/';
+  static const String signUp = '/signUp';
   static const String home = '/home';
   static const String cart = '/cart';
   static const String userProfile = '/userProfile';
@@ -21,6 +23,8 @@ class Routes {
         return buildRoute(const LayoutPage());
       case login:
         return buildRoute(const SignInPage());
+      case signUp:
+        return buildRoute(const SignUpPage());
       case cart:
         return buildRoute(const CartPage());
       case userProfile:

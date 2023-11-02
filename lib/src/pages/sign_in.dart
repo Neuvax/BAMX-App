@@ -1,4 +1,5 @@
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
+import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
@@ -27,24 +28,22 @@ class SignInPage extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
-                  Builder(builder: (context) {
-                    return BlocBuilder<AuthCubit, CurrentAuthState>(
-                      builder: (context, state) {
-                        if (state.status == Status.error) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              state.errorMessage ?? "",
-                              style: const TextStyle(color: Colors.red),
-                            ),
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    );
-                  }),
+                  BlocBuilder<AuthCubit, CurrentAuthState>(
+                    builder: (context, state) {
+                      if (state.status == Status.error) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            state.errorMessage ?? "",
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
 
                   TextField(
                     controller: emailController,
@@ -98,9 +97,19 @@ class SignInPage extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text('Registrarse',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Routes.signUp, (route) => false);
+                    },
+                    child: const Text(
+                      'Registrarse',
                       style: TextStyle(
-                          color: MyColors.green, fontWeight: FontWeight.bold)),
+                        color: MyColors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
