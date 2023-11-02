@@ -84,6 +84,12 @@ class SignUpPage extends StatelessWidget {
                         labelText: 'Contraseña',
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'La contraseña debe tener al menos 10 caracteres, '
+                      'una letra mayúscula, una letra minúscula, un número y un carácter especial.',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
