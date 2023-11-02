@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
@@ -12,6 +14,10 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
+
+    final googleSignInId = Platform.isIOS
+        ? "773494367421-422ivqc2pclhjqsgpphp90g2jms4r8u8.apps.googleusercontent.com"
+        : "773494367421-oggkhjsdg0b29fgluid0ammb2hnr7tfe.apps.googleusercontent.com";
 
     return Scaffold(
         body: Center(
@@ -81,7 +87,8 @@ class SignInPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: MyColors.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       textStyle: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -89,7 +96,9 @@ class SignInPage extends StatelessWidget {
                     ),
                     child: const Text('Iniciar Sesión',
                         style: TextStyle(
-                            color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700)),
                   ),
                   TextButton(
                     onPressed: () {
@@ -97,7 +106,9 @@ class SignInPage extends StatelessWidget {
                     },
                     child: const Text('Olvidé mi contraseña',
                         style: TextStyle(
-                            color: MyColors.primary, fontSize: 12, fontWeight: FontWeight.w700)),
+                            color: MyColors.primary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700)),
                   ),
                   const SizedBox(
                     height: 10,
@@ -118,10 +129,10 @@ class SignInPage extends StatelessWidget {
                     height: 20,
                   ),
                   //Sign in with Google
-                  const GoogleSignInButton(
-                      loadingIndicator: CircularProgressIndicator(),
-                      clientId:
-                          "773494367421-oggkhjsdg0b29fgluid0ammb2hnr7tfe.apps.googleusercontent.com")
+                  GoogleSignInButton(
+                    loadingIndicator: const CircularProgressIndicator(),
+                    clientId: googleSignInId,
+                  )
                 ],
               ),
             )
