@@ -10,6 +10,9 @@ abstract class AuthRepository {
   ///Sign up with Email and Password
   Future<void> signUpWithEmailAndPassword(String name, String email, String password);
 
+  ///Forgot Password
+  Future<void> sendPasswordResetEmail(String email);
+
   /// Signs out
   Future<void> signOut();
 }

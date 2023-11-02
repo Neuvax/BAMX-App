@@ -26,6 +26,11 @@ class AuthRepositoryImp extends AuthRepository {
     await _firebaseAuth.currentUser?.updateDisplayName(name);
   }
 
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
   /// Signs out the current user from Firebase.
   @override
   Future<void> signOut() async {

@@ -111,6 +111,31 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
   }
 
+  /// Sends a password reset email to the user.
+  Future<void> sendPasswordResetEmail(String email) async {
+    if (email.isEmpty) {
+      emit(const CurrentAuthState(Status.error, 'El correo electrónico es requerido.'));
+      return;
+    }
+    try {
+      await _authRepository.sendPasswordResetEmail(email);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          emit(const CurrentAuthState(Status.error, 'No se encontró ningún usuario con ese correo electrónico.'));
+          break;
+        case 'invalid-email':
+          emit(const CurrentAuthState(Status.error, 'El correo electrónico o contraseña no son válidos.'));
+          break;
+        default:
+          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          break;
+      }
+    } catch (e) {
+      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+    }
+  }
+
   /// Signs out the current user.
   Future<void> signOut() async {
     await _authRepository.signOut();
