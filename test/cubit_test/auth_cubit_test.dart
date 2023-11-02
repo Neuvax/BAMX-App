@@ -27,7 +27,7 @@ void main() {
     },
     act: (cubit) async => await cubit.init(),
     expect: () => [
-      CurrentAuthState.signedOut,
+      const CurrentAuthState(Status.signedOut, null),
     ],
   );
 
@@ -40,7 +40,7 @@ void main() {
     },
     act: (cubit) => cubit.init(),
     expect: () => [
-      CurrentAuthState.signedIn,
+      const CurrentAuthState(Status.signedIn, null),
     ],
   );
 
@@ -57,8 +57,8 @@ void main() {
         await cubit.signOut();
       },
       expect: () => [
-            CurrentAuthState.signedIn,
-            CurrentAuthState.signedOut,
+            const CurrentAuthState(Status.signedIn, null),
+            const CurrentAuthState(Status.signedOut, null),
           ],
       verify: (cubit) {
         verify(() => mockRepo.signOut()).called(1);
