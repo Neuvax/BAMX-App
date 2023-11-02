@@ -4,6 +4,18 @@ abstract class AuthRepository {
   /// Subscribes to the authentication state change
   Stream<String?> get onAuthStateChanged;
 
+  ///Sign in with Email and Password
+  Future<void> signInWithEmailAndPassword(String email, String password);
+
+  ///Sign up with Email and Password
+  Future<void> signUpWithEmailAndPassword(String name, String email, String password);
+
+  ///Forgot Password
+  Future<void> sendPasswordResetEmail(String email);
+
+  ///Send Email Verification
+  Future<void> sendEmailVerification();
+
   /// Signs out
   Future<void> signOut();
 }

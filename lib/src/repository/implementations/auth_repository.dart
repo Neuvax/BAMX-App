@@ -15,6 +15,27 @@ class AuthRepositoryImp extends AuthRepository {
     return _firebaseAuth.authStateChanges().asyncMap((user) => user?.uid);
   }
 
+  @override
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  @override
+  Future<void> signUpWithEmailAndPassword(String name, String email, String password) async {
+    await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    await _firebaseAuth.currentUser?.updateDisplayName(name);
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  @override
+  Future<void> sendEmailVerification() async {
+    await _firebaseAuth.currentUser?.sendEmailVerification();
+  }
+
   /// Signs out the current user from Firebase.
   @override
   Future<void> signOut() async {
