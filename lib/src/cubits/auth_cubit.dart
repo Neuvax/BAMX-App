@@ -109,6 +109,9 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     } catch (e) {
       emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
     }
+
+    //Send email verification
+    await _authRepository.sendEmailVerification();
   }
 
   /// Sends a password reset email to the user.

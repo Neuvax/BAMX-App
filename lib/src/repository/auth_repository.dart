@@ -13,6 +13,9 @@ abstract class AuthRepository {
   ///Forgot Password
   Future<void> sendPasswordResetEmail(String email);
 
+  ///Send Email Verification
+  Future<void> sendEmailVerification();
+
   /// Signs out
   Future<void> signOut();
 }
