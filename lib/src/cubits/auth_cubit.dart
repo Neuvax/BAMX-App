@@ -116,16 +116,16 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     if (email.isEmpty) {
       emit(const CurrentAuthState(Status.error, 'El correo electrónico es requerido.'));
       return;
+    } else if (!email.contains('@')) {
+      emit(const CurrentAuthState(Status.error, 'El correo electrónico no es válido.'));
+      return;
     }
     try {
       await _authRepository.sendPasswordResetEmail(email);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
-          emit(const CurrentAuthState(Status.error, 'No se encontró ningún usuario con ese correo electrónico.'));
-          break;
-        case 'invalid-email':
-          emit(const CurrentAuthState(Status.error, 'El correo electrónico o contraseña no son válidos.'));
+          emit(const CurrentAuthState(Status.error, 'Error al enviar el correo de recuperación.'));
           break;
         default:
           emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
@@ -134,6 +134,11 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     } catch (e) {
       emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
     }
+  }
+
+  /// Resets the error message.
+  Future<void> reset() async {
+    emit(const CurrentAuthState(Status.signedOut, null));
   }
 
   /// Signs out the current user.

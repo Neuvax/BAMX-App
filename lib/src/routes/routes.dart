@@ -1,4 +1,5 @@
 import 'package:bamx_app/src/pages/cart_page.dart';
+import 'package:bamx_app/src/pages/forgot_password.dart';
 import 'package:bamx_app/src/pages/layout_page.dart';
 import 'package:bamx_app/src/pages/sign_in.dart';
 import 'package:bamx_app/src/pages/sign_up.dart';
@@ -9,6 +10,7 @@ class Routes {
   /// Route names
   static const String login = '/';
   static const String signUp = '/signUp';
+  static const String forgotPassword = '/forgotPassword';
   static const String home = '/home';
   static const String cart = '/cart';
   static const String userProfile = '/userProfile';
@@ -25,6 +27,8 @@ class Routes {
         return buildRoute(const SignInPage());
       case signUp:
         return buildRoute(const SignUpPage());
+      case forgotPassword:
+        return buildRoute(const ForgotPasswordPage());
       case cart:
         return buildRoute(const CartPage());
       case userProfile:

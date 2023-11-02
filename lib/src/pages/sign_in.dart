@@ -81,8 +81,7 @@ class SignInPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: MyColors.primary,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10), // Reduce these values
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       textStyle: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -90,12 +89,18 @@ class SignInPage extends StatelessWidget {
                     ),
                     child: const Text('Iniciar Sesión',
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700)),
+                            color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.forgotPassword);
+                    },
+                    child: const Text('Olvidé mi contraseña',
+                        style: TextStyle(
+                            color: MyColors.primary, fontSize: 12, fontWeight: FontWeight.w700)),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   TextButton(
                     onPressed: () {
