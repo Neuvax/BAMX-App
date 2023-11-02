@@ -97,13 +97,12 @@ class SignInPage extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.signUp, (route) => false);
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.signUp);
                     },
                     child: const Text(
-                      'Registrarse',
+                      '¿No tienes cuenta? Regístrate aquí',
                       style: TextStyle(
                         color: MyColors.green,
                         fontWeight: FontWeight.bold,
