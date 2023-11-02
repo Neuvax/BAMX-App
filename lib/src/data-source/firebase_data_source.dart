@@ -12,6 +12,11 @@ class FirebaseDataSource {
     return user;
   }
 
+  ///Sign in with Email and Password
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+  }
+
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
 
   ///Get documents from the collection "items" where the field "prioridad" is greater than 1

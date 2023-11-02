@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, CurrentAuthState> (
       listener: (context, state) {
-        if (state == CurrentAuthState.signedOut) {
+        if (state.status == Status.signedOut) {
           _navigatorKey.currentState?.pushNamedAndRemoveUntil(Routes.login, (_) => false);
-        } else if (state == CurrentAuthState.signedIn) {
+        } else if (state.status == Status.signedIn) {
           _navigatorKey.currentState?.pushNamedAndRemoveUntil(Routes.home, (_) => false);
         }
       },
