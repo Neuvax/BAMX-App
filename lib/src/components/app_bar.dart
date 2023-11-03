@@ -1,3 +1,4 @@
+import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/cubits/cart_cubit.dart';
 import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
@@ -33,6 +34,17 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             width: 0.2,
           ))),
           child: AppBar(
+            leading: ModalRoute.of(context)?.isFirst == true
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      context.read<AuthCubit>().resetMessage();
+                      Navigator.of(context).pop();
+                    },
+                    color: MyColors.accent,
+                    iconSize: 27.0,
+                  ),
             title: Image.asset(
               "assets/images/bamx_logo.png",
               fit: BoxFit.cover,

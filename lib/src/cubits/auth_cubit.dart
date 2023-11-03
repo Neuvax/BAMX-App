@@ -31,6 +31,10 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     _authSubscription = _authRepository.onAuthStateChanged.listen(_authStateChanged);
   }
 
+  void resetMessage () {
+    emit(const CurrentAuthState(Status.signedIn, null));
+  }
+
   void _authStateChanged(String? userUID) {
     if (userUID != null) {
       emit(const CurrentAuthState(Status.signedIn, null));
