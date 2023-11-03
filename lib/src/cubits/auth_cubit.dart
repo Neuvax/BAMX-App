@@ -52,6 +52,11 @@ class AuthCubit extends Cubit<CurrentAuthState> {
   Stream<String?> getCurrentUserProfilePicture() {
     return _authRepository.getCurrentUserProfilePicture;
   }
+
+  /// Deletes the current user.
+  Future<void> deleteUser() async {
+    await _authRepository.deleteUser();
+  }
   
 
   /// Signs in the user with email and password and throws an error if the sign in fails.

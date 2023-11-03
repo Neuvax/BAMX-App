@@ -33,6 +33,12 @@ class AuthRepositoryImp extends AuthRepository {
     return _firebaseAuth.authStateChanges().asyncMap((user) => user?.photoURL);
   }
 
+  /// Deletes the current user.
+  @override
+  Future<void> deleteUser() async {
+    await _firebaseAuth.currentUser?.delete();
+  }
+
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);

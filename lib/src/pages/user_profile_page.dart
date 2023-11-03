@@ -150,6 +150,31 @@ class UserProfilePage extends StatelessWidget {
                             fontSize: 20,
                             fontWeight: FontWeight.w700)),
                   ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 120),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.read<AuthCubit>().deleteUser();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        textStyle: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Eliminar mi cuenta', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
+                          Icon(Icons.delete, color: Colors.white,),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             )));

@@ -13,6 +13,9 @@ abstract class AuthRepository {
   /// Gets the current user profile picture
   Stream<String?> get getCurrentUserProfilePicture;
 
+  /// Deletes the current user
+  Future<void> deleteUser();
+
   ///Sign in with Email and Password
   Future<void> signInWithEmailAndPassword(String email, String password);
 
