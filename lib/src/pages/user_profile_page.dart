@@ -113,9 +113,9 @@ class UserProfilePage extends StatelessWidget {
                                 ),
                               );
                             } else if (state.status == Status.success) {
-                              return const Text(
-                                'Se ha enviado un correo electrónico para restablecer la contraseña.',
-                                style: TextStyle(
+                              return Text(
+                                state.errorMessage ?? '',
+                                style: const TextStyle(
                                   color: Colors.green,
                                   fontSize: 16,
                                 ),
