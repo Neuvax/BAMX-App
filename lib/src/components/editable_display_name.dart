@@ -24,8 +24,22 @@ class _EditableDisplayNameState extends State<EditableDisplayName> {
   }
 
   Future<void> _saveChanges() async {
+    if (_controller.text == _displayName) {
+      setState(() {
+        _isEditing = false;
+      });
+      return;
+    }
     await context.read<AuthCubit>().updateDisplayName(_controller.text);
-    _displayName = _controller.text;
+    if (_controller.text.isNotEmpty) {
+      setState(() {
+        _displayName = _controller.text;
+      });
+    } else {
+      setState(() {
+        _controller.text = _displayName!;
+      });
+    }
     setState(() {
       _isEditing = false;
     });

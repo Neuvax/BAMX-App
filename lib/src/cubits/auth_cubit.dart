@@ -171,6 +171,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
     try {
       await _authRepository.updateDisplayName(name);
+      emit(const CurrentAuthState(Status.success, 'Nombre actualizado correctamente.'));
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -196,6 +197,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     try {
       final url = await _authRepository.pushImageToFirebaseStorage(uid, path, image);
       await _authRepository.updateProfilePicture(url);
+      emit(const CurrentAuthState(Status.success, 'Imagen actualizada correctamente.'));
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
