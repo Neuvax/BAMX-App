@@ -7,6 +7,9 @@ abstract class AuthRepository {
   /// Gets the current user display name
   Stream<String?> get getUserDisplayName;
 
+  /// Gets the current user email
+  Stream<String?> get getCurrentUserEmail;
+
   ///Sign in with Email and Password
   Future<void> signInWithEmailAndPassword(String email, String password);
 

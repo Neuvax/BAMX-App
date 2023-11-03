@@ -21,6 +21,12 @@ class AuthRepositoryImp extends AuthRepository {
     return _firebaseAuth.authStateChanges().asyncMap((user) => user?.displayName);
   }
 
+  /// Returns the current user email.
+  @override
+  Stream<String?> get getCurrentUserEmail {
+    return _firebaseAuth.authStateChanges().asyncMap((user) => user?.email);
+  }
+
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
