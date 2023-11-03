@@ -162,6 +162,28 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
   }
 
+  ///Updates the current user display name.
+  Future<void> updateDisplayName(String name) async {
+    if (name.isEmpty) {
+      emit(const CurrentAuthState(Status.error, 'El nombre es requerido.'));
+      return;
+    }
+    try {
+      await _authRepository.updateDisplayName(name);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          emit(const CurrentAuthState(Status.error, 'Error al actualizar el nombre.'));
+          break;
+        default:
+          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          break;
+      }
+    } catch (e) {
+      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+    }
+  }
+
   /// Resets the error message.
   Future<void> reset() async {
     emit(const CurrentAuthState(Status.signedOut, null));

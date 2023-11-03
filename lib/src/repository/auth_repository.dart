@@ -13,6 +13,9 @@ abstract class AuthRepository {
   /// Gets the current user profile picture
   Stream<String?> get getCurrentUserProfilePicture;
 
+  ///Update display name
+  Future<void> updateDisplayName(String name);
+
   /// Deletes the current user
   Future<void> deleteUser();
 

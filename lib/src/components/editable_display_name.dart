@@ -1,5 +1,7 @@
+import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditableDisplayName extends StatefulWidget {
   final String? displayName;
@@ -12,15 +14,18 @@ class EditableDisplayName extends StatefulWidget {
 class _EditableDisplayNameState extends State<EditableDisplayName> {
   late TextEditingController _controller;
   bool _isEditing = false;
+  late String? _displayName;
 
   @override
   void initState() {
     super.initState();
+    _displayName = widget.displayName;
     _controller = TextEditingController(text: widget.displayName);
   }
 
-  void _saveChanges() {
-    //TODO: save changes
+  Future<void> _saveChanges() async {
+    await context.read<AuthCubit>().updateDisplayName(_controller.text);
+    _displayName = _controller.text;
     setState(() {
       _isEditing = false;
     });
@@ -40,7 +45,7 @@ class _EditableDisplayNameState extends State<EditableDisplayName> {
                   ),
                 )
               : Text(
-                  widget.displayName ?? '',
+                  _displayName ?? '',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

@@ -39,6 +39,12 @@ class AuthRepositoryImp extends AuthRepository {
     await _firebaseAuth.currentUser?.delete();
   }
 
+  /// Updates the current user display name.
+  @override
+  Future<void> updateDisplayName(String name) async {
+    await _firebaseAuth.currentUser?.updateDisplayName(name);
+  }
+
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
