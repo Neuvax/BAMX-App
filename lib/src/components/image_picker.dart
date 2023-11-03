@@ -42,7 +42,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     return GestureDetector(
         onTap: _pickImage,
         child: CircleAvatar(
-          radius: 50,
+          radius: 75,
           backgroundColor: Colors.grey[300],
           backgroundImage: getImageProvider(),
         ));

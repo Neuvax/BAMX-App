@@ -4,6 +4,9 @@ abstract class AuthRepository {
   /// Subscribes to the authentication state change
   Stream<String?> get onAuthStateChanged;
 
+  /// Gets the current user display name
+  Stream<String?> get getUserDisplayName;
+
   ///Sign in with Email and Password
   Future<void> signInWithEmailAndPassword(String email, String password);
 

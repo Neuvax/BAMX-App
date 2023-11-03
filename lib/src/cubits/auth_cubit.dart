@@ -38,6 +38,12 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
   }
 
+  /// Gets the current user display name.
+  Stream<String?> getCurrentUserDisplayName() {
+    return _authRepository.getUserDisplayName;
+  }
+  
+
   /// Signs in the user with email and password and throws an error if the sign in fails.
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
