@@ -1,4 +1,5 @@
 import 'package:bamx_app/src/components/app_bar.dart';
+import 'package:bamx_app/src/components/editable_display_name.dart';
 import 'package:bamx_app/src/components/image_picker.dart';
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/utils/colors.dart';
@@ -45,34 +46,7 @@ class UserProfilePage extends StatelessWidget {
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                snapshot.data ?? '',
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: MyColors.accent,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () {},
-                                ),
-                              )
-                            ],
-                          ),
-                        );
+                        return EditableDisplayName(displayName: snapshot.data);
                       }
                     },
                   ),
