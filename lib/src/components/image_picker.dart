@@ -5,17 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerWidget extends StatefulWidget {
-  const ImagePickerWidget({super.key});
+  final String? imageUrl;
+
+  const ImagePickerWidget({super.key, this.imageUrl});
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
-  File? _imageFile;
   String? _imageUrl;
-
+  File? _imageFile;
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _imageUrl = widget.imageUrl;
+  }
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -23,6 +30,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
+        _imageUrl = null; // clear the imageUrl if a new image is picked
       });
     }
   }
@@ -40,11 +48,12 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: _pickImage,
-        child: CircleAvatar(
-          radius: 75,
-          backgroundColor: Colors.grey[300],
-          backgroundImage: getImageProvider(),
-        ));
+      onTap: _pickImage,
+      child: CircleAvatar(
+        radius: 75,
+        backgroundColor: Colors.grey[300],
+        backgroundImage: getImageProvider(),
+      ),
+    );
   }
 }

@@ -27,6 +27,12 @@ class AuthRepositoryImp extends AuthRepository {
     return _firebaseAuth.authStateChanges().asyncMap((user) => user?.email);
   }
 
+  /// Returns the current user profile picture.
+  @override
+  Stream<String?> get getCurrentUserProfilePicture {
+    return _firebaseAuth.authStateChanges().asyncMap((user) => user?.photoURL);
+  }
+
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);

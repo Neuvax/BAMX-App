@@ -47,6 +47,11 @@ class AuthCubit extends Cubit<CurrentAuthState> {
   Stream<String?> getCurrentUserEmail() {
     return _authRepository.getCurrentUserEmail;
   }
+
+  /// Gets the current user profile picture.
+  Stream<String?> getCurrentUserProfilePicture() {
+    return _authRepository.getCurrentUserProfilePicture;
+  }
   
 
   /// Signs in the user with email and password and throws an error if the sign in fails.

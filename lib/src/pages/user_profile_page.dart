@@ -19,7 +19,21 @@ class UserProfilePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const ImagePickerWidget(),
+                  StreamBuilder(
+                    stream: context
+                        .read<AuthCubit>()
+                        .getCurrentUserProfilePicture(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<String?> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return ImagePickerWidget(imageUrl: snapshot.data);
+                      }
+                    },
+                  ),
                   const SizedBox(height: 30),
                   StreamBuilder<String?>(
                     stream:
@@ -111,7 +125,10 @@ class UserProfilePage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
                     ),
-                    child: const Text('Aviso de Privacidad', style: TextStyle(color: MyColors.accent),),
+                    child: const Text(
+                      'Aviso de Privacidad',
+                      style: TextStyle(color: MyColors.accent),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(

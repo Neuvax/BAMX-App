@@ -10,6 +10,9 @@ abstract class AuthRepository {
   /// Gets the current user email
   Stream<String?> get getCurrentUserEmail;
 
+  /// Gets the current user profile picture
+  Stream<String?> get getCurrentUserProfilePicture;
+
   ///Sign in with Email and Password
   Future<void> signInWithEmailAndPassword(String email, String password);
 
