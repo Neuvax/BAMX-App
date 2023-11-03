@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bamx_app/main.dart';
 import 'package:bamx_app/src/repository/auth_repository.dart';
@@ -184,6 +185,30 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
   }
 
+  ///Updates the current user profile picture.
+  ///Push image to firebase storage
+  Future<void> updateProfilePicture(String path, File image) async {
+    final uid = _authRepository.getCurrentUserUID;
+    if (uid == null) {
+      emit(const CurrentAuthState(Status.error, 'Error al actualizar la imagen.'));
+      return;    
+    }
+    try {
+      final url = await _authRepository.pushImageToFirebaseStorage(uid, path, image);
+      await _authRepository.updateProfilePicture(url);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          emit(const CurrentAuthState(Status.error, 'Error al actualizar la imagen.'));
+          break;
+        default:
+          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          break;
+      }
+    } catch (e) {
+      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+    }
+  }
   /// Resets the error message.
   Future<void> reset() async {
     emit(const CurrentAuthState(Status.signedOut, null));

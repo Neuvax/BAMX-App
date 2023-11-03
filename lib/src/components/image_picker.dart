@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerWidget extends StatefulWidget {
@@ -25,6 +27,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   }
 
   Future<void> _pickImage() async {
+    final authCubit = context.read<AuthCubit>();
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
@@ -33,6 +36,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         _imageUrl = null; // clear the imageUrl if a new image is picked
       });
     }
+    await authCubit.updateProfilePicture("profile_picture", _imageFile!);
   }
 
   ImageProvider<Object>? getImageProvider() {

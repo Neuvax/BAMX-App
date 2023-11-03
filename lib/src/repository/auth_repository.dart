@@ -1,3 +1,5 @@
+import 'dart:io';
+
 abstract class AuthRepository {
   /// Abstract class for authentication repository
 
@@ -13,8 +15,17 @@ abstract class AuthRepository {
   /// Gets the current user profile picture
   Stream<String?> get getCurrentUserProfilePicture;
 
+  /// Gets the current user UID
+  String? get getCurrentUserUID;
+
   ///Update display name
   Future<void> updateDisplayName(String name);
+
+  ///Update profile picture
+  Future<void> updateProfilePicture(String url);
+
+  ///Push image to firebase storage
+  Future<String> pushImageToFirebaseStorage(String uid, String path, File image);  
 
   /// Deletes the current user
   Future<void> deleteUser();

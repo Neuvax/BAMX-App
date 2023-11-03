@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:bamx_app/src/repository/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class AuthRepositoryImp extends AuthRepository {
   /// `AuthRepositoryImp` class extends `AuthRepository`.
@@ -7,6 +10,9 @@ class AuthRepositoryImp extends AuthRepository {
  
   /// Instance of Firebase authentication.
   final _firebaseAuth = FirebaseAuth.instance;
+
+  ///Instance of Firebase storage.
+  final _firebaseStorage = firebase_storage.FirebaseStorage.instance;
 
   /// Returns a Stream of Strings representing the authentication state changes.
   /// Each emitted event is the user's UID, or null if the user is not signed in.
@@ -33,6 +39,12 @@ class AuthRepositoryImp extends AuthRepository {
     return _firebaseAuth.authStateChanges().asyncMap((user) => user?.photoURL);
   }
 
+  /// Returns the current user UID.
+  @override
+  String? get getCurrentUserUID {
+    return _firebaseAuth.currentUser?.uid;
+  }
+
   /// Deletes the current user.
   @override
   Future<void> deleteUser() async {
@@ -43,6 +55,22 @@ class AuthRepositoryImp extends AuthRepository {
   @override
   Future<void> updateDisplayName(String name) async {
     await _firebaseAuth.currentUser?.updateDisplayName(name);
+  }
+
+  ///Push image to firebase storage
+  @override
+  Future<String> pushImageToFirebaseStorage(String uid, String path, File image) async {
+    final ref = _firebaseStorage.ref().child(path).child(uid);
+    final uploadTask = ref.putFile(image);
+    final snapshot = await uploadTask.whenComplete(() => null);
+    final url = await snapshot.ref.getDownloadURL();
+    return url;
+  }
+
+  /// Updates the current user profile picture.
+  @override
+  Future<void> updateProfilePicture(String url) async {
+    await _firebaseAuth.currentUser?.updatePhotoURL(url);
   }
 
   @override
