@@ -1,4 +1,5 @@
 import 'package:bamx_app/src/components/app_bar.dart';
+import 'package:bamx_app/src/components/image_picker.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -7,10 +8,17 @@ class UserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: MyAppBar(),
-      body: ProfileScreen(
-        avatarSize: 100,
+    return Scaffold(
+      appBar: const MyAppBar(),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ImagePickerWidget(),
+            ],
+          ),
+        )
       )
     );
   }
