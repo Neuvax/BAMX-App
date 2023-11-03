@@ -31,12 +31,13 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
+      final newImageFile = File(pickedFile.path);
+      await authCubit.updateProfilePicture("profile_picture", newImageFile);
       setState(() {
-        _imageFile = File(pickedFile.path);
+        _imageFile = newImageFile;
         _imageUrl = null; // clear the imageUrl if a new image is picked
       });
     }
-    await authCubit.updateProfilePicture("profile_picture", _imageFile!);
   }
 
   ImageProvider<Object>? getImageProvider() {
