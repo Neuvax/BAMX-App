@@ -20,8 +20,7 @@ class UserProfilePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const ImagePickerWidget(),
-                  const SizedBox(height: 20),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 30),
                   StreamBuilder<String?>(
                     stream:
                         context.read<AuthCubit>().getCurrentUserDisplayName(),
