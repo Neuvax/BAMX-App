@@ -89,11 +89,37 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   );
                 },
               ),
-              IconButton(
-                icon: const Icon(Icons.person),
-                onPressed: () => navigateToRoute(context, Routes.userProfile),
-                color: MyColors.accent,
-                iconSize: 27.0,
+              StreamBuilder(
+                stream:
+                    context.read<AuthCubit>().getCurrentUserProfilePicture(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.data == null) {
+                    return IconButton(
+                      icon: const Icon(Icons.person),
+                      onPressed: () =>
+                          navigateToRoute(context, Routes.userProfile),
+                      color: MyColors.accent,
+                      iconSize: 27.0,
+                    );
+                  } else {
+                    return GestureDetector(
+                      onTap: () => navigateToRoute(context, Routes.userProfile),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(snapshot.data!),
+                        ),
+                      ),
+                    );
+                  }
+                },
               )
             ],
           ),
