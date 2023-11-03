@@ -112,6 +112,44 @@ class UserProfilePage extends StatelessWidget {
                             }
                           },
                         ),
+                        GestureDetector(
+                          onTap: () {
+                            context.read<AuthCubit>().sendPasswordResetEmail(
+                                context
+                                    .read<AuthCubit>()
+                                    .getCurrentUserEmail()
+                                    .toString());
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(3.0),
+                            child: Text(
+                              'Restablecer Contraseña',
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ),
+                        ),
+                        BlocBuilder<AuthCubit, CurrentAuthState>(
+                          builder: (context, state) {
+                            if (state.status == Status.error) {
+                              return Text(
+                                state.errorMessage ?? '',
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 16,
+                                ),
+                              );
+                            } else if (state.status == Status.success) {
+                              return const Text(
+                                'Se ha enviado un correo electrónico para restablecer la contraseña.',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 16,
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -169,8 +207,15 @@ class UserProfilePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('Eliminar mi cuenta', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
-                          Icon(Icons.delete, color: Colors.white,),
+                          Text('Eliminar mi cuenta',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700)),
+                          Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
                     ),
