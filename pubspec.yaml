@@ -45,6 +45,9 @@ dependencies:
   shimmer: ^3.0.0
   firebase_ui_oauth_google: ^1.2.13
   google_sign_in: ^6.1.5
+  cached_network_image: ^3.3.0
+  image_picker: ^1.0.4
+  firebase_storage: ^11.4.1
 
 dev_dependencies:
   flutter_test:

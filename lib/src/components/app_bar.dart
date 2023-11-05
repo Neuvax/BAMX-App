@@ -1,3 +1,4 @@
+import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/cubits/cart_cubit.dart';
 import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
@@ -33,6 +34,17 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             width: 0.2,
           ))),
           child: AppBar(
+            leading: ModalRoute.of(context)?.isFirst == true
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      context.read<AuthCubit>().resetMessage();
+                      Navigator.of(context).pop();
+                    },
+                    color: MyColors.accent,
+                    iconSize: 27.0,
+                  ),
             title: Image.asset(
               "assets/images/bamx_logo.png",
               fit: BoxFit.cover,
@@ -77,11 +89,37 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   );
                 },
               ),
-              IconButton(
-                icon: const Icon(Icons.person),
-                onPressed: () => navigateToRoute(context, Routes.userProfile),
-                color: MyColors.accent,
-                iconSize: 27.0,
+              StreamBuilder(
+                stream:
+                    context.read<AuthCubit>().getCurrentUserProfilePicture(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.data == null) {
+                    return IconButton(
+                      icon: const Icon(Icons.person),
+                      onPressed: () =>
+                          navigateToRoute(context, Routes.userProfile),
+                      color: MyColors.accent,
+                      iconSize: 27.0,
+                    );
+                  } else {
+                    return GestureDetector(
+                      onTap: () => navigateToRoute(context, Routes.userProfile),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(snapshot.data!),
+                        ),
+                      ),
+                    );
+                  }
+                },
               )
             ],
           ),

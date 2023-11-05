@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bamx_app/main.dart';
 import 'package:bamx_app/src/repository/auth_repository.dart';
@@ -30,6 +31,10 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     _authSubscription = _authRepository.onAuthStateChanged.listen(_authStateChanged);
   }
 
+  void resetMessage () {
+    emit(const CurrentAuthState(Status.signedIn, null));
+  }
+
   void _authStateChanged(String? userUID) {
     if (userUID != null) {
       emit(const CurrentAuthState(Status.signedIn, null));
@@ -37,6 +42,27 @@ class AuthCubit extends Cubit<CurrentAuthState> {
       emit(const CurrentAuthState(Status.signedOut, null));
     }
   }
+
+  /// Gets the current user display name.
+  Stream<String?> getCurrentUserDisplayName() {
+    return _authRepository.getUserDisplayName;
+  }
+
+  /// Gets the current user email.
+  Stream<String?> getCurrentUserEmail() {
+    return _authRepository.getCurrentUserEmail;
+  }
+
+  /// Gets the current user profile picture.
+  Stream<String?> getCurrentUserProfilePicture() {
+    return _authRepository.getCurrentUserProfilePicture;
+  }
+
+  /// Deletes the current user.
+  Future<void> deleteUser() async {
+    await _authRepository.deleteUser();
+  }
+  
 
   /// Signs in the user with email and password and throws an error if the sign in fails.
   Future<void> signInWithEmailAndPassword(String email, String password) async {
@@ -141,6 +167,54 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
   }
 
+  ///Updates the current user display name.
+  Future<void> updateDisplayName(String name) async {
+    if (name.isEmpty) {
+      emit(const CurrentAuthState(Status.error, 'El nombre es requerido.'));
+      return;
+    }
+    try {
+      await _authRepository.updateDisplayName(name);
+      emit(const CurrentAuthState(Status.success, 'Nombre actualizado correctamente.'));
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          emit(const CurrentAuthState(Status.error, 'Error al actualizar el nombre.'));
+          break;
+        default:
+          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          break;
+      }
+    } catch (e) {
+      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+    }
+  }
+
+  ///Updates the current user profile picture.
+  ///Push image to firebase storage
+  Future<void> updateProfilePicture(String path, File image) async {
+    final uid = _authRepository.getCurrentUserUID;
+    if (uid == null) {
+      emit(const CurrentAuthState(Status.error, 'Error al actualizar la imagen.'));
+      return;    
+    }
+    try {
+      final url = await _authRepository.pushImageToFirebaseStorage(uid, path, image);
+      await _authRepository.updateProfilePicture(url);
+      emit(const CurrentAuthState(Status.success, 'Imagen actualizada correctamente.'));
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          emit(const CurrentAuthState(Status.error, 'Error al actualizar la imagen.'));
+          break;
+        default:
+          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          break;
+      }
+    } catch (e) {
+      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+    }
+  }
   /// Resets the error message.
   Future<void> reset() async {
     emit(const CurrentAuthState(Status.signedOut, null));
