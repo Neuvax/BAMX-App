@@ -1,4 +1,5 @@
 import 'package:bamx_app/src/pages/cart_page.dart';
+import 'package:bamx_app/src/pages/donation_confirmation_page.dart';
 import 'package:bamx_app/src/pages/forgot_password.dart';
 import 'package:bamx_app/src/pages/layout_page.dart';
 import 'package:bamx_app/src/pages/sign_in.dart';
@@ -14,6 +15,7 @@ class Routes {
   static const String home = '/home';
   static const String cart = '/cart';
   static const String userProfile = '/userProfile';
+  static const String donationConfirmation = '/donationConfirmation';
 
   /// Route generator
   static Route routes(RouteSettings settings) {
@@ -33,6 +35,8 @@ class Routes {
         return buildRoute(const CartPage());
       case userProfile:
         return buildRoute(const UserProfilePage());
+      case donationConfirmation:
+        return buildRoute(const DonationConformationPage());
       default:
         throw Exception('La ruta: ${settings.name} no existe');
     }
