@@ -1,3 +1,4 @@
+import 'package:bamx_app/src/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 class HistorialPage extends StatelessWidget {
@@ -5,8 +6,17 @@ class HistorialPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Historial Page'),
+    return Center(
+      child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed(Routes.donationConfirmation, arguments: {
+              'donationUID': '123456789',
+              'donationCount': 5,
+              'pointsAwarded': 10,
+              'status': 'pending',
+            });
+          },
+          child: const Text('Historial')),
     );
   }
 }
