@@ -75,17 +75,6 @@ class DonationConformationPageUI extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10.0),
-            Text(
-              pointsAwarded == 1
-                  ? "+$pointsAwarded punto"
-                  : "+$pointsAwarded puntos",
-              style: const TextStyle(
-                fontSize: 15.0,
-                fontWeight: FontWeight.w600,
-                color: MyColors.green,
-              ),
-            ),
-            const SizedBox(height: 10.0),
             StatusBadge(status: status),
             const SizedBox(height: 20.0),
             ElevatedButton(
