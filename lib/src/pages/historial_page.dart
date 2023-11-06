@@ -13,6 +13,7 @@ class HistorialPage extends StatelessWidget {
               'donationUID': '123456789',
               'donationCount': 5,
               'pointsAwarded': 10,
+              'status': 'pending',
             });
           },
           child: const Text('Historial')),
