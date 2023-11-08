@@ -97,7 +97,7 @@ class _ListItemState extends State<ListItem> {
           ),
         ],
       ),
-      subtitle: Text("Unidad: " + widget.item.unidad),
+      subtitle: Text("Unidad: ${widget.item.unidad}"),
     );
   }
 }
