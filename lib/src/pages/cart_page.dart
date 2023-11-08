@@ -1,5 +1,8 @@
 import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/cubits/cart_cubit.dart';
+import 'package:bamx_app/src/model/cart_item.dart';
+import 'package:bamx_app/src/model/item_donacion.dart';
+import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,17 +35,9 @@ class CartPage extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: cartItemsList.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(cartItemsList[index].item.nombre),
-                        subtitle: Text("Cantidad: ${cartItemsList[index].cantidad} ${cartItemsList[index].item.unidad}"),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            context.read<CartCubit>().removeItem(cartItemsList[index].item.id);
-                          },
-                        ),
-                      ),
+                    return ListItem(
+                      item: cartItemsList[index].item,
+                      quantity: ValueNotifier<int>(cartItemsList[index].cantidad),
                     );
                   },
                 ),
@@ -51,6 +46,61 @@ class CartPage extends StatelessWidget {
           },
         )
       )
+    );
+  }
+}
+
+class ListItem extends StatefulWidget {
+  final ItemDonacion item;
+  final ValueNotifier<int> quantity;
+
+  const ListItem({super.key, required this.item, required this.quantity});
+
+  @override
+  _ListItemState createState() => _ListItemState();
+}
+
+class _ListItemState extends State<ListItem> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(widget.item.nombre),
+          
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  context.read<CartCubit>().deleteItemToCart(widget.item);
+                },
+                icon: const Icon(Icons.remove, color: MyColors.primary),
+              ),
+              ValueListenableBuilder<int>(
+                valueListenable: widget.quantity,
+                builder: (context, value, child) {
+                  return Text(value.toString());
+                },
+              ),
+              IconButton(
+                onPressed: () {
+                  context.read<CartCubit>().addItemToCart(widget.item);
+                },
+                icon: const Icon(Icons.add, color: MyColors.yellow),
+              ),
+              IconButton(
+        onPressed: () {
+          context.read<CartCubit>().removeItem(widget.item.id);
+        },
+        icon: const Icon(Icons.delete),
+      ),
+            ],
+          ),
+        ],
+      ),
+      subtitle: Text("Unidad: " + widget.item.unidad),
     );
   }
 }

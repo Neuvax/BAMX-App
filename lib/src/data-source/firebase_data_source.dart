@@ -60,6 +60,27 @@ class FirebaseDataSource {
     });
   }
 
+  ///Delete item to user's cart
+  ///If the item is already in the cart, decrease the quantity
+  ///If the item is not in the cart, subtract it
+  Future<void> deleteItemToCart(ItemDonacion item) async {
+    final user = currentUser;
+    final cart = await firestore.collection('carts').doc(user.uid).get();
+    final cartItems = cart.data()?['items'] as List<dynamic>? ?? [];
+    final itemIndex = cartItems.indexWhere((element) => element['id'] == item.id);
+    if (itemIndex == -1) {
+      cartItems.add({
+        'id': item.id,
+        'cantidad': 1,
+      });
+    } else {
+      cartItems[itemIndex]['cantidad']--;
+    }
+    await firestore.collection('carts').doc(user.uid).set({
+      'items': cartItems,
+    });
+  }
+
   ///Get all items from user's cart
   ///The collection has documents with the user's id and each document has the item's id and quantity
   ///This method gets the item's id and quantity and then gets the item's data from the collection "items"
