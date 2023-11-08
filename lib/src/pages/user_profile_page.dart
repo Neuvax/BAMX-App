@@ -11,6 +11,11 @@ class UserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final phoneNumberController = TextEditingController();
+    final verificationCodeController = TextEditingController();
+
+    bool is2FASetup = false;
+
     return Scaffold(
         appBar: const MyAppBar(),
         body: Container(
@@ -127,6 +132,56 @@ class UserProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (!is2FASetup) // Conditionally show the 2FA setup if not already set up
+                    Column(
+                      children: [
+                        TextField(
+                          controller: phoneNumberController,
+                          decoration: const InputDecoration(
+                            labelText: 'Phone Number',
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20.0),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Start the 2FA setup process
+                            context
+                                .read<AuthCubit>()
+                                .enrollSecondFactor(phoneNumberController.text);
+                          },
+                          child: const Text('Configurar 2FA'),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: verificationCodeController,
+                          decoration: const InputDecoration(
+                            labelText: 'Verification Code',
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20.0),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Complete the 2FA setup process
+                            String? verificationId =
+                                context.read<AuthCubit>().getVerificationId();
+                            context.read<AuthCubit>().verifySecondFactor(
+                                verificationId!,
+                                verificationCodeController.text);
+                          },
+                          child: const Text('Verificar 2FA'),
+                        ),
+                      ],
+                    ),
                   OutlinedButton(
                     onPressed: () {
                       // Handle the click event for Aviso de Privacidad here

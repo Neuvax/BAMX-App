@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class AuthRepositoryImp extends AuthRepository {
   /// `AuthRepositoryImp` class extends `AuthRepository`.
   /// It uses Firebase for authentication.
- 
+
   /// Instance of Firebase authentication.
   final _firebaseAuth = FirebaseAuth.instance;
 
@@ -24,7 +24,9 @@ class AuthRepositoryImp extends AuthRepository {
   /// Returns the current user.
   @override
   Stream<String?> get getUserDisplayName {
-    return _firebaseAuth.authStateChanges().asyncMap((user) => user?.displayName);
+    return _firebaseAuth
+        .authStateChanges()
+        .asyncMap((user) => user?.displayName);
   }
 
   /// Returns the current user email.
@@ -59,7 +61,8 @@ class AuthRepositoryImp extends AuthRepository {
 
   ///Push image to firebase storage
   @override
-  Future<String> pushImageToFirebaseStorage(String uid, String path, File image) async {
+  Future<String> pushImageToFirebaseStorage(
+      String uid, String path, File image) async {
     final ref = _firebaseStorage.ref().child(path).child(uid);
     final uploadTask = ref.putFile(image);
     final snapshot = await uploadTask.whenComplete(() => null);
@@ -75,12 +78,15 @@ class AuthRepositoryImp extends AuthRepository {
 
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
   }
 
   @override
-  Future<void> signUpWithEmailAndPassword(String name, String email, String password) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+  Future<void> signUpWithEmailAndPassword(
+      String name, String email, String password) async {
+    await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
     await _firebaseAuth.currentUser?.updateDisplayName(name);
   }
 
@@ -98,5 +104,40 @@ class AuthRepositoryImp extends AuthRepository {
   @override
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+  }
+
+  @override
+  Future<void> enrollSecondFactor(
+      String phoneNumber, Function(String, int?) codeSentCallback) async {
+    User? user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('No user currently signed in.');
+
+    final multiFactorSession = await user.multiFactor.getSession();
+    await _firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      multiFactorSession: multiFactorSession,
+      verificationCompleted: (PhoneAuthCredential credential) async {},
+      verificationFailed: (FirebaseAuthException e) {
+        throw e;
+      },
+      codeSent: codeSentCallback,
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
+
+  @override
+  Future<void> completeSecondFactorEnrollment(
+      String verificationId, String smsCode) async {
+    User? user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('No user currently signed in.');
+
+    final credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+
+    await user.multiFactor.enroll(
+      PhoneMultiFactorGenerator.getAssertion(credential),
+    );
   }
 }
