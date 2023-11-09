@@ -1,3 +1,4 @@
+import 'package:bamx_app/src/components/donaciones_home.dart';
 import 'package:bamx_app/src/components/notice_card.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +56,7 @@ class HomePage extends StatelessWidget {
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Donaciones pendientes",
+                "Donaciones prioritarias",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -64,19 +65,12 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 28),
             SizedBox(
-              height: 200,
+              height: 150,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    margin: const EdgeInsets.only(right: 10),
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      color: Colors.grey[300],
-                    ),
-                  );
+                  return const DonacionesHome();
                 },
               ),
             ),
