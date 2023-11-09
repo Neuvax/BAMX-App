@@ -1,3 +1,4 @@
+import 'package:bamx_app/src/components/notice_card.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -40,21 +41,13 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 28),
-            //Horizontal List,
             SizedBox(
               height: 200,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    margin: const EdgeInsets.only(right: 10),
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      color: Colors.grey[300],
-                    ),
-                  );
+                  return const NoticeCard();
                 },
               ),
             ),
