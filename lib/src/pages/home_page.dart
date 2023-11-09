@@ -1,7 +1,9 @@
 import 'package:bamx_app/src/components/donaciones_home.dart';
 import 'package:bamx_app/src/components/notice_card.dart';
 import 'package:bamx_app/src/components/pending_donations_home.dart';
+import 'package:bamx_app/src/cubits/donaciones_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -71,14 +73,14 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 28),
-            SizedBox(
-              height: 150,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                itemBuilder: (BuildContext context, int index) {
-                  return const DonacionesHome();
-                },
+            BlocProvider(
+              create: (context) => ListaDonacionesPrioritariasCubit()..init(),
+              child: SizedBox(
+                height: 150,
+                child: BlocBuilder<ListaDonacionesPrioritariasCubit,
+                    ListaDonacionesState>(
+                  builder: (context, state) => DonacionesHome(state: state),
+                ),
               ),
             ),
             const SizedBox(height: 28),
