@@ -1,4 +1,5 @@
 import 'package:bamx_app/src/cubits/news_cubit.dart';
+import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -82,35 +83,48 @@ class NewsCard extends StatelessWidget {
         itemCount: newsList.length,
         itemBuilder: (context, index) => SizedBox(
           width: 250,
-          child: Card(
-            color: MyColors.background,
-            elevation: 1,
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(4.0),
-                    topRight: Radius.circular(4.0),
-                  ),
-                  child: Image.network(
-                    newsList[index].image,
-                    height: 130,
-                    width: 250,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    newsList[index].title,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                Routes.news,
+                arguments: {
+                  'title': newsList[index].title,
+                  'description': newsList[index].description,
+                  'image': newsList[index].image,
+                },
+              );
+            },
+            child: Card(
+              color: MyColors.background,
+              elevation: 1,
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(4.0),
+                      topRight: Radius.circular(4.0),
+                    ),
+                    child: Image.network(
+                      newsList[index].image,
+                      height: 130,
+                      width: 250,
+                      fit: BoxFit.fill,
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      newsList[index].title,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
