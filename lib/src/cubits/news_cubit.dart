@@ -19,7 +19,7 @@ class NewsCubit extends Cubit<NewsState> {
   void newsListener(Iterable<News> news) {
     emit(NewsState(
       isLoading: false,
-      news: news.toList(),
+      news: news,
     ));
   }
 
@@ -33,7 +33,7 @@ class NewsCubit extends Cubit<NewsState> {
 class NewsState extends Equatable {
   final bool isLoading;
   final String error;
-  final List<dynamic> news;
+  final Iterable<News> news;
 
   const NewsState({
     this.isLoading = true,
@@ -47,7 +47,7 @@ class NewsState extends Equatable {
   NewsState copyWith({
     bool? isLoading,
     String? error,
-    List<dynamic>? news,
+    Iterable<News>? news,
   }) {
     return NewsState(
       isLoading: isLoading ?? this.isLoading,
