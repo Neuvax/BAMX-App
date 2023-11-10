@@ -1,5 +1,5 @@
 import 'package:bamx_app/src/components/donaciones_home.dart';
-import 'package:bamx_app/src/components/notice_card.dart';
+import 'package:bamx_app/src/components/news_card.dart';
 import 'package:bamx_app/src/components/pending_donations_home.dart';
 import 'package:bamx_app/src/cubits/donaciones_cubit.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
-                  return const NoticeCard();
+                  return const NewsCard();
                 },
               ),
             ),

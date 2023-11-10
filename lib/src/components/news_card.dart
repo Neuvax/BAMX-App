@@ -1,8 +1,8 @@
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-class NoticeCard extends StatelessWidget {
-  const NoticeCard({super.key});
+class NewsCard extends StatelessWidget {
+  const NewsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
