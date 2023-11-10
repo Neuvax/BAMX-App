@@ -1,5 +1,6 @@
 import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class NewsPage extends StatelessWidget {
   const NewsPage({super.key});
@@ -66,11 +67,11 @@ class NewsPageUI extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 14),
-              Text(
-                description,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
+              Markdown(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                selectable: true,
+                data: description,
               ),
               const SizedBox(height: 28),
             ],
