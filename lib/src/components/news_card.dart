@@ -130,7 +130,7 @@ class NewsCard extends StatelessWidget {
                           newsList[index].date,
                           style: const TextStyle(
                             fontSize: 12,
-                            color: Colors.grey,
+                            color: Color.fromARGB(255, 67, 67, 67),
                           ),
                           textAlign: TextAlign.left,
                         )

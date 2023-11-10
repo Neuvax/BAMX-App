@@ -61,7 +61,7 @@ class NewsPageUI extends StatelessWidget {
                     date,
                     style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.grey,
+                      color: Color.fromARGB(255, 67, 67, 67),
                     ),
                   ),
                 ],
