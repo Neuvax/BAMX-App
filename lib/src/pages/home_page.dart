@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
             BlocProvider(
               create: (context) => NewsCubit()..init(),
               child: SizedBox(
-                height: 200,
+                height: 210,
                 child: BlocBuilder<NewsCubit, NewsState>(
                   builder: (context, state) => NewsCard(state: state),
                 ),
