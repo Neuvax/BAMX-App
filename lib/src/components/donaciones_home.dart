@@ -19,16 +19,16 @@ class DonacionesHome extends StatelessWidget {
           itemCount: 3,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
-            return SizedBox(
+            return const SizedBox(
               width: 130,
               child: Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const ClipRRect(
+                      ClipRRect(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
@@ -43,7 +43,7 @@ class DonacionesHome extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(top: 4.0),
                         child: SizedBox(
                           height: 14,
@@ -55,11 +55,6 @@ class DonacionesHome extends StatelessWidget {
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.add_shopping_cart),
-                        onPressed: () {},
-                        color: MyColors.green,
-                      )
                     ],
                   ),
                 ),
@@ -111,9 +106,28 @@ class DonacionesHome extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.add_shopping_cart),
-                  onPressed: () => context
-                      .read<ListaDonacionesPrioritariasCubit>()
-                      .addItemToCart(listaDonaciones[index]),
+                  onPressed: () {
+                    context
+                        .read<ListaDonacionesPrioritariasCubit>()
+                        .addItemToCart(listaDonaciones[index]);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: <Widget>[
+                            const Icon(Icons.check, color: Colors.white),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: Text(
+                                  '${listaDonaciones[index].nombre} agregado al carrito',
+                                  style: const TextStyle(color: Colors.white)),
+                            ),
+                          ],
+                        ),
+                        duration: const Duration(seconds: 2),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
                   color: MyColors.green,
                 )
               ],
