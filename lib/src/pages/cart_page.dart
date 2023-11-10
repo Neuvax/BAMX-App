@@ -69,11 +69,14 @@ class _ListItemState extends State<ListItem> {
           Text(widget.item.nombre),
           Row(
             children: [
-              IconButton(
-                onPressed: () {
+              RawMaterialButton(
+                onPressed: (){
                   context.read<CartCubit>().deleteItemToCart(widget.item);
                 },
-                icon: const Icon(Icons.remove, color: MyColors.primary),
+                shape: CircleBorder(),
+                fillColor: MyColors.primary,
+                child: const Icon(Icons.remove, color: Colors.white),
+
               ),
               ValueListenableBuilder<int>(
                 valueListenable: widget.quantity,
@@ -81,11 +84,15 @@ class _ListItemState extends State<ListItem> {
                   return Text(value.toString());
                 },
               ),
-              IconButton(
-                onPressed: () {
+
+              RawMaterialButton(
+                onPressed: (){
                   context.read<CartCubit>().addItemToCart(widget.item);
                 },
-                icon: const Icon(Icons.add, color: MyColors.yellow),
+                shape: CircleBorder(),
+                fillColor: MyColors.yellow,
+                child: const Icon(Icons.add, color: Colors.white),
+
               ),
               IconButton(
                 onPressed: () {
