@@ -12,6 +12,7 @@ class NewsPage extends StatelessWidget {
       title: arguments['title'],
       description: arguments['description'],
       image: arguments['image'],
+      date: arguments['date'],
     );
   }
 }
@@ -20,43 +21,62 @@ class NewsPageUI extends StatelessWidget {
   final String title;
   final String description;
   final String image;
-  const NewsPageUI({super.key, required this.title, required this.description, required this.image});
+  final String date;
+  const NewsPageUI(
+      {super.key,
+      required this.title,
+      required this.description,
+      required this.image,
+      required this.date});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(),
       body: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.network(
-              image,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(height: 28),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Image.network(
+                image,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
-            ),
-            const SizedBox(height: 28),
-            Text(
-              description,
-              style: const TextStyle(
-                fontSize: 14,
+              const SizedBox(height: 28),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    date,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 28),
-          ],
+              const SizedBox(height: 14),
+              Text(
+                description,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 28),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

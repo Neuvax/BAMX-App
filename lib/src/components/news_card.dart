@@ -92,6 +92,7 @@ class NewsCard extends StatelessWidget {
                   'title': newsList[index].title,
                   'description': newsList[index].description,
                   'image': newsList[index].image,
+                  'date': newsList[index].date,
                 },
               );
             },
