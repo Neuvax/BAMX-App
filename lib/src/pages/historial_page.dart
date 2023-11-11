@@ -14,6 +14,7 @@ class HistorialPage extends StatelessWidget {
         children: const <Widget>[
           DonationDateSection(date: 'Donaciones Pendientes'),
           DonationDateSection(date: 'Donaciones Pasadas'),
+          DonationDateSection(date: 'Donaciones rechazadas'),
         ],
       ),
     ));

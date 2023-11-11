@@ -36,21 +36,17 @@ class DonationInformationPage extends StatelessWidget {
             ),
             const SizedBox(height: 24), // For spacing
             Center(
-              child: SizedBox(
-                width: 150, // Define your preferred width
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        MyColors.primary, // Use your preferred color
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    foregroundColor:
-                        Colors.white, // This is the button's text color
-                  ),
-                  onPressed: () {
-                    // Handle button press
-                  },
-                  child: const Text('No entregado',
-                      style: TextStyle(fontSize: 18)),
+              child: Container(
+                width: 140, // Define your preferred width
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                decoration: BoxDecoration(
+                  color: MyColors.primary, // Use your preferred color
+                  borderRadius: BorderRadius.circular(100), // Rounded corners
+                ),
+                child: const Text(
+                  'No entregado',
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
