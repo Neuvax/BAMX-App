@@ -1,6 +1,32 @@
 import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:bamx_app/src/cubits/historial_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Step 2: Use BlocBuilder in the historial_page
+// class HistorialPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<HistorialCubit, List<UserDonation>>(
+//       builder: (context, userDonations) {
+//         return ListView.builder(
+//           itemCount: userDonations.length,
+//           itemBuilder: (context, index) {
+//             final donation = userDonations[index];
+//             return ListTile(
+//               title: Text(donation.title),
+//               onTap: () {
+//                 // Step 3: Update the state when a donation item is clicked
+//                 context.read<HistorialCubit>().selectDonation(donation);
+//               },
+//             );
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 
 class HistorialPage extends StatelessWidget {
   const HistorialPage({super.key});

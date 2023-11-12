@@ -87,6 +87,7 @@ class FirebaseDataSource {
     }).asyncMap((event) => Future.wait(event));
   }
 
+  // Get all current user donations in all the categories
   Stream<UserDonations> getUserDonations() {
     return firestore
         .collection('donations')
@@ -113,6 +114,7 @@ class FirebaseDataSource {
     });
   }
 
+  // Get user pending Donations for Home page quick view
   Stream<Iterable<DonationGroup>> getUserPendingDonations() {
     return firestore
         .collection('donations')
