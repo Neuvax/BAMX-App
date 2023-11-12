@@ -2,31 +2,8 @@ import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:bamx_app/src/cubits/historial_cubit.dart';
+import 'package:bamx_app/src/model/donation_group.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-// Step 2: Use BlocBuilder in the historial_page
-// class HistorialPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocBuilder<HistorialCubit, List<UserDonation>>(
-//       builder: (context, userDonations) {
-//         return ListView.builder(
-//           itemCount: userDonations.length,
-//           itemBuilder: (context, index) {
-//             final donation = userDonations[index];
-//             return ListTile(
-//               title: Text(donation.title),
-//               onTap: () {
-//                 // Step 3: Update the state when a donation item is clicked
-//                 context.read<HistorialCubit>().selectDonation(donation);
-//               },
-//             );
-//           },
-//         );
-//       },
-//     );
-//   }
-// }
 
 class HistorialPage extends StatelessWidget {
   const HistorialPage({super.key});
@@ -34,56 +11,96 @@ class HistorialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(16.0), // Add padding here
-      child: ListView(
-        children: const <Widget>[
-          DonationDateSection(date: 'Donaciones Pendientes'),
-          DonationDateSection(date: 'Donaciones Pasadas'),
-          DonationDateSection(date: 'Donaciones rechazadas'),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: BlocBuilder<HistorialCubit, HistorialState>(
+          builder: (context, state) {
+            return ListView(
+              children: <Widget>[
+                DonationSection(
+                  titulo: 'Donaciones Pendientes',
+                  donations: state.pendientes,
+                ),
+                DonationSection(
+                  titulo: 'Donaciones Aprobadas',
+                  donations: state.aprobadas,
+                ),
+                DonationSection(
+                  titulo: 'Donaciones Rechazadas',
+                  donations: state.rechazadas,
+                ),
+              ],
+            );
+          },
+        ),
       ),
-    ));
+    );
   }
 }
 
-class DonationDateSection extends StatelessWidget {
-  final String date;
+class DonationSection extends StatelessWidget {
+  final String titulo;
+  final List<DonationGroup> donations;
 
-  const DonationDateSection({super.key, required this.date});
+  const DonationSection({
+    super.key,
+    required this.titulo,
+    required this.donations,
+  });
 
   @override
   Widget build(BuildContext context) {
+    if (donations.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Text(
+            "No se encontraron donaciones",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            date,
+            titulo,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),
         ),
-        const DonationItem(),
-        const DonationItem(),
+        ...donations
+            .map((donationGroup) => DonationItem(donationGroup: donationGroup))
+            .toList(),
       ],
     );
   }
 }
 
 class DonationItem extends StatelessWidget {
-  const DonationItem({super.key});
+  final DonationGroup donationGroup;
+
+  const DonationItem({super.key, required this.donationGroup});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ListTile(
-        title: const Text('Noviembre 10 2023', style: TextStyle(fontSize: 18)),
-        subtitle: const Text('#owejkcwe'),
+        title: Text(
+          'ID: ${donationGroup.donationId}',
+          style: const TextStyle(fontSize: 18),
+        ),
+        subtitle: Text('Puntos Totales: ${donationGroup.totalPoints}'),
         trailing: ElevatedButton(
           onPressed: () {
             Navigator.pushNamed(context, Routes.donationInformationPage);
