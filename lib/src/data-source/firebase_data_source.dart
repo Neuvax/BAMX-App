@@ -73,7 +73,9 @@ class FirebaseDataSource {
         'id': item.id,
         'cantidad': 1,
       });
-    } else {
+    } else if(cartItems[itemIndex]['cantidad'] == 0){
+      cartItems[itemIndex]['cantidad'] = 0;
+    }else {
       cartItems[itemIndex]['cantidad']--;
     }
     await firestore.collection('carts').doc(user.uid).set({
