@@ -18,7 +18,7 @@ class DonacionItem extends Equatable {
 
   factory DonacionItem.fromMap(Map<String, dynamic> data) {
     return DonacionItem(
-      image: data['image'],
+      image: '', // Placeholder since it's not provided in your structure
       name: data['name'],
       puntos: data['puntos'],
       cantidad: data['cantidad'],

@@ -10,28 +10,28 @@ class HistorialPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: BlocProvider(
-        create: (context) => HistorialCubit()..init(),
+    return BlocProvider(
+      create: (context) => HistorialCubit()..init(),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: BlocBuilder<HistorialCubit, HistorialState>(
           builder: (context, state) {
-            return ListView(
-              children: <Widget>[
-                DonationSection(
-                  titulo: 'Donaciones Pendientes',
-                  donations: state.pendientes,
-                ),
-                DonationSection(
-                  titulo: 'Donaciones Aprobadas',
-                  donations: state.aprobadas,
-                ),
-                DonationSection(
-                  titulo: 'Donaciones Rechazadas',
-                  donations: state.rechazadas,
-                ),
-              ],
-            );
+            if (!state.isLoading) {
+              return ListView.builder(
+                itemCount: state.pendientes.length,
+                itemBuilder: (context, index) {
+                  final donationGroup = state.pendientes[index];
+                  return DonationSection(
+                    titulo: 'Donación Pendiente',
+                    donations: [donationGroup],
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
           },
         ),
       ),

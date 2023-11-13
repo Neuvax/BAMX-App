@@ -94,22 +94,24 @@ class FirebaseDataSource {
         .doc(currentUser.uid)
         .snapshots()
         .map((snapshot) {
+      final pendientesData =
+          snapshot.data()?['pendientes'] as Map<String, dynamic>?;
+      final aprobadasData =
+          snapshot.data()?['aprobadas'] as Map<String, dynamic>?;
+      final rechazadasData =
+          snapshot.data()?['rechazadas'] as Map<String, dynamic>?;
+
       final pendientes =
-          (snapshot.data()?['pendientes'] as List<dynamic>? ?? [])
-              .map((group) => DonationGroup.fromMap(group))
-              .toList();
-      final aprobadas = (snapshot.data()?['aprobadas'] as List<dynamic>? ?? [])
-          .map((group) => DonationGroup.fromMap(group))
-          .toList();
+          pendientesData != null ? DonationGroup.fromMap(pendientesData) : null;
+      final aprobadas =
+          aprobadasData != null ? DonationGroup.fromMap(aprobadasData) : null;
       final rechazadas =
-          (snapshot.data()?['rechazadas'] as List<dynamic>? ?? [])
-              .map((group) => DonationGroup.fromMap(group))
-              .toList();
+          rechazadasData != null ? DonationGroup.fromMap(rechazadasData) : null;
 
       return UserDonations(
-        pendientes: pendientes,
-        aprobadas: aprobadas,
-        rechazadas: rechazadas,
+        pendientes: pendientes != null ? [pendientes] : [],
+        aprobadas: aprobadas != null ? [aprobadas] : [],
+        rechazadas: rechazadas != null ? [rechazadas] : [],
       );
     });
   }
