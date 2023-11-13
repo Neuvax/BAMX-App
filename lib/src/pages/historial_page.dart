@@ -10,9 +10,10 @@ class HistorialPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: BlocProvider(
+        create: (context) => HistorialCubit()..init(),
         child: BlocBuilder<HistorialCubit, HistorialState>(
           builder: (context, state) {
             return ListView(
