@@ -73,8 +73,8 @@ class FirebaseDataSource {
         'id': item.id,
         'cantidad': 1,
       });
-    } else if(cartItems[itemIndex]['cantidad'] == 0){
-      cartItems[itemIndex]['cantidad'] = 0;
+    } else if(cartItems[itemIndex]['cantidad'] == 1){
+      cartItems[itemIndex]['cantidad'] = 1;
     }else {
       cartItems[itemIndex]['cantidad']--;
     }
