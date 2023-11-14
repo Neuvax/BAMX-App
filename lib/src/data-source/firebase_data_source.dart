@@ -1,5 +1,6 @@
 import 'package:bamx_app/src/model/cart_item.dart';
 import 'package:bamx_app/src/model/item_donacion.dart';
+import 'package:bamx_app/src/model/news.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -109,6 +110,37 @@ class FirebaseDataSource {
     cartItems.removeAt(itemIndex);
     await firestore.collection('carts').doc(user.uid).set({
       'items': cartItems,
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ///Get all the news from the collection "news"
+  ///Returns a stream of News
+  Stream<Iterable<News>> getNews() {
+    return firestore.collection('news').snapshots().map((snapshot) {
+      return snapshot.docs
+        .map((doc) => News.fromMap(doc.id, doc.data()))
+        .toList(); // Convert to list
     });
   }
 }
