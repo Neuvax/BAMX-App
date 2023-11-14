@@ -1,8 +1,12 @@
+import 'package:bamx_app/src/cubits/historial_cubit.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class PendingDonationsHome extends StatelessWidget {
-  const PendingDonationsHome({super.key});
+
+  final HistorialState state;
+
+  const PendingDonationsHome({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
