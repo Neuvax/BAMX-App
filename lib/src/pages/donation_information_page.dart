@@ -2,11 +2,13 @@ import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:bamx_app/src/cubits/historial_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bamx_app/src/model/donation_group.dart';
 
 class DonationInformationPage extends StatelessWidget {
-  const DonationInformationPage({super.key});
+  final DonationGroup donationGroup;
+
+  const DonationInformationPage({Key? key, required this.donationGroup})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +23,15 @@ class DonationInformationPage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20.0), // Add padding on top
               child: Center(
                 child: QrImageView(
-                  data: "ejrrgerh23462383H",
+                  data: donationGroup.donationId.toString(),
                   version: QrVersions.auto,
                   size: 215.0,
                 ),
               ),
             ),
             const SizedBox(height: 24), // For spacing
-            const Text(
-              '#986736bs',
+            Text(
+              '#${donationGroup.donationId.toString()}',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -45,8 +47,8 @@ class DonationInformationPage extends StatelessWidget {
                   color: MyColors.primary, // Use your preferred color
                   borderRadius: BorderRadius.circular(100), // Rounded corners
                 ),
-                child: const Text(
-                  'No entregado',
+                child: Text(
+                  donationGroup.donationStatus,
                   style: TextStyle(fontSize: 14, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
@@ -64,10 +66,19 @@ class DonationInformationPage extends StatelessWidget {
               ),
             ), // For spacing
             // Add your text details here
-            const TextDetailRow(
-                title: 'tenetur illo quia nulla',
-                points: 'Puntos',
-                quantity: 'Cantidad'),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: donationGroup.donationItems.length,
+              itemBuilder: (context, index) {
+                final donacionItem = donationGroup.donationItems[index];
+                return TextDetailRow(
+                  title: donacionItem.name,
+                  points: '${donacionItem.puntos}',
+                  quantity: '${donacionItem.cantidad}',
+                );
+              },
+            ),
             // Repeat TextDetailRow for each entry
           ],
         ),

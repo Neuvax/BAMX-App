@@ -7,6 +7,7 @@ import 'package:bamx_app/src/pages/sign_up.dart';
 import 'package:bamx_app/src/pages/donation_information_page.dart';
 import 'package:bamx_app/src/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:bamx_app/src/model/donation_group.dart';
 
 class Routes {
   /// Route names
@@ -41,7 +42,9 @@ class Routes {
       case donationConfirmation:
         return buildRoute(const DonationConformationPage());
       case donationInformationPage:
-        return buildRoute(const DonationInformationPage());
+        final DonationGroup donationGroup = settings.arguments as DonationGroup;
+        return buildRoute(
+            DonationInformationPage(donationGroup: donationGroup));
       default:
         throw Exception('La ruta: ${settings.name} no existe');
     }
