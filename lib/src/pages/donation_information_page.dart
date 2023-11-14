@@ -44,16 +44,21 @@ class DonationInformationPage extends StatelessWidget {
                 width: 140, // Define your preferred width
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 decoration: BoxDecoration(
-                  color: MyColors.primary, // Use your preferred color
+                  color: getStatusColor(donationGroup
+                      .donationStatus), // Use the getStatusColor method
                   borderRadius: BorderRadius.circular(100), // Rounded corners
                 ),
                 child: Text(
                   donationGroup.donationStatus,
-                  style: TextStyle(fontSize: 14, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
+
             const SizedBox(height: 24), // For spacing
             const Align(
               alignment: Alignment.centerLeft,
@@ -106,15 +111,39 @@ class TextDetailRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(title, style: const TextStyle(fontSize: 16)),
-          Text(quantity, style: const TextStyle(fontSize: 16)),
-          Text(points,
-              style: const TextStyle(
-                  fontSize: 16,
-                  color: MyColors.green,
-                  fontWeight: FontWeight.bold)),
+          Expanded(
+            flex: 2,
+            child: Text(title, style: const TextStyle(fontSize: 16)),
+          ),
+          Expanded(
+            child: Text(quantity,
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.right),
+          ),
+          Expanded(
+            child: Text(points,
+                style: const TextStyle(
+                    fontSize: 16,
+                    color: MyColors.green,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.right),
+          ),
         ],
       ),
     );
+  }
+}
+
+Color getStatusColor(String status) {
+  switch (status) {
+    case 'Pending':
+      return MyColors.yellow;
+    case 'Approved':
+      return MyColors.green;
+    case 'Rejected':
+      return MyColors.primary;
+    default:
+      return MyColors
+          .primary; // O un color predeterminado para estados desconocidos
   }
 }

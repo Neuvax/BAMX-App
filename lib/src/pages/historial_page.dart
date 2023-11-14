@@ -18,15 +18,37 @@ class HistorialPage extends StatelessWidget {
         child: BlocBuilder<HistorialCubit, HistorialState>(
           builder: (context, state) {
             if (!state.isLoading) {
-              return ListView.builder(
-                itemCount: state.pendientes.length,
-                itemBuilder: (context, index) {
-                  final donationGroup = state.pendientes[index];
-                  return DonationSection(
+              List<Widget> donationSections = [];
+
+              if (state.pendientes.isNotEmpty) {
+                donationSections.add(
+                  DonationSection(
                     titulo: 'Donación Pendiente',
-                    donations: [donationGroup],
-                  );
-                },
+                    donations: state.pendientes,
+                  ),
+                );
+              }
+
+              if (state.aprobadas.isNotEmpty) {
+                donationSections.add(
+                  DonationSection(
+                    titulo: 'Donación Aprobada',
+                    donations: state.aprobadas,
+                  ),
+                );
+              }
+
+              if (state.rechazadas.isNotEmpty) {
+                donationSections.add(
+                  DonationSection(
+                    titulo: 'Donación Rechazada',
+                    donations: state.rechazadas,
+                  ),
+                );
+              }
+
+              return ListView(
+                children: donationSections,
               );
             } else {
               return const Center(
