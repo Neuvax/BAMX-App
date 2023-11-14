@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bamx_app/main.dart';
 import 'package:bamx_app/src/repository/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum Status {
@@ -67,8 +68,51 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     await _authRepository.deleteUser();
   }
 
+  Future<String?> getSmsCodeFromUser(BuildContext context) async {
+    String? smsCode;
+
+    // Update the UI - wait for the user to enter the SMS code
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Codigo SMS:'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ingresar'),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                smsCode = null;
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+          ],
+          content: Container(
+            padding: const EdgeInsets.all(20),
+            child: TextField(
+              onChanged: (value) {
+                smsCode = value;
+              },
+              textAlign: TextAlign.center,
+              autofocus: true,
+            ),
+          ),
+        );
+      },
+    );
+
+    return smsCode;
+  }
+
   /// Signs in the user with email and password and throws an error if the sign in fails.
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<void> signInWithEmailAndPassword(
+      String email, String password, BuildContext context) async {
     if (email.isEmpty || password.isEmpty) {
       emit(const CurrentAuthState(
           Status.error, 'El correo electrónico y contraseña son requeridos.'));
@@ -76,11 +120,44 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
     try {
       await _authRepository.signInWithEmailAndPassword(email, password);
+    } on FirebaseAuthMultiFactorException catch (e) {
+      final firstHint = e.resolver.hints.first;
+      if (firstHint is! PhoneMultiFactorInfo) {
+        return;
+      }
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        multiFactorSession: e.resolver.session,
+        multiFactorInfo: firstHint,
+        verificationCompleted: (_) {},
+        verificationFailed: (_) {},
+        codeSent: (String verificationId, int? resendToken) async {
+          final smsCode = await getSmsCodeFromUser(context);
+
+          if (smsCode != null) {
+            // Create a PhoneAuthCredential with the code
+            final credential = PhoneAuthProvider.credential(
+              verificationId: verificationId,
+              smsCode: smsCode,
+            );
+
+            try {
+              await e.resolver.resolveSignIn(
+                PhoneMultiFactorGenerator.getAssertion(
+                  credential,
+                ),
+              );
+            } on FirebaseAuthException catch (e) {
+              emit(e.message as CurrentAuthState);
+            }
+          }
+        },
+        codeAutoRetrievalTimeout: (_) {},
+      );
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
           emit(const CurrentAuthState(Status.error,
-              'No se encontró ningún usuario con ese correo electrónico.'));
+              'El correo electrónico o contraseña no son válidos.'));
           break;
         case 'wrong-password':
           emit(const CurrentAuthState(Status.error,
@@ -323,21 +400,6 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     } catch (e) {
       emit(CurrentAuthState(
           Status.error, 'Failed to verify second factor: ${e.toString()}'));
-    }
-  }
-
-  // Método para iniciar sesión con el segundo factor
-  Future<void> signInWithSecondFactor(PhoneAuthCredential credential) async {
-    emit(const CurrentAuthState(Status.loading, null));
-    try {
-      // Este método se llamaría después de que el usuario haya ingresado el código de verificación enviado a su teléfono.
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      emit(const CurrentAuthState(Status.signedIn, null));
-    } on FirebaseAuthException catch (e) {
-      emit(CurrentAuthState(Status.error, e.message));
-    } catch (e) {
-      emit(CurrentAuthState(Status.error,
-          'Failed to sign in with second factor: ${e.toString()}'));
     }
   }
 

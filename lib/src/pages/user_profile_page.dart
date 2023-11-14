@@ -2,7 +2,9 @@ import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/components/editable_display_name.dart';
 import 'package:bamx_app/src/components/image_picker.dart';
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
+import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,10 +13,10 @@ class UserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final phoneNumberController = TextEditingController();
-    final verificationCodeController = TextEditingController();
-
     bool is2FASetup = false;
+
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    User? firebaseUser = auth.currentUser;
 
     return Scaffold(
         appBar: const MyAppBar(),
@@ -132,56 +134,21 @@ class UserProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (!is2FASetup) // Conditionally show the 2FA setup if not already set up
-                    Column(
-                      children: [
-                        TextField(
-                          controller: phoneNumberController,
-                          decoration: const InputDecoration(
-                            labelText: 'Phone Number',
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 20.0),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30))),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Start the 2FA setup process
-                            context
-                                .read<AuthCubit>()
-                                .enrollSecondFactor(phoneNumberController.text);
-                          },
-                          child: const Text('Configurar 2FA'),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: verificationCodeController,
-                          decoration: const InputDecoration(
-                            labelText: 'Verification Code',
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 20.0),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30))),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Complete the 2FA setup process
-                            String? verificationId =
-                                context.read<AuthCubit>().getVerificationId();
-                            context.read<AuthCubit>().verifySecondFactor(
-                                verificationId!,
-                                verificationCodeController.text);
-                          },
-                          child: const Text('Verificar 2FA'),
-                        ),
-                      ],
-                    ),
+                  if (firebaseUser?.providerData[0].providerId != 'google.com')
+                    if (!is2FASetup)
+                      Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.twoFactorAuth,
+                              );
+                            },
+                            child: const Text('Configurar 2FA'),
+                          )
+                        ],
+                      ),
                   OutlinedButton(
                     onPressed: () {
                       // Handle the click event for Aviso de Privacidad here
