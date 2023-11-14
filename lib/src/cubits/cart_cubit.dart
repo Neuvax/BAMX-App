@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:bamx_app/main.dart';
 import 'package:bamx_app/src/model/cart_item.dart';
+import 'package:bamx_app/src/model/item_donacion.dart';
 import 'package:bamx_app/src/repository/cart_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+
 
 class CartCubit extends Cubit<CartState> {
   final CartRepository _cartRepository = getIt();
@@ -25,6 +28,14 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> removeItem(String itemId) async {
     await _cartRepository.removeItemFromCart(itemId);
+  }
+
+  Future<void> addItemToCart(ItemDonacion item) async {
+    await _cartRepository.addItemToCart(item);
+  }
+
+  Future<void> deleteItemToCart(ItemDonacion item) async {
+    await _cartRepository.deleteItemToCart(item);
   }
 
   @override
