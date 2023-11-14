@@ -2,6 +2,7 @@ import 'package:bamx_app/src/model/cart_item.dart';
 import 'package:bamx_app/src/model/donation_group.dart';
 import 'package:bamx_app/src/model/user_donations.dart';
 import 'package:bamx_app/src/model/item_donacion.dart';
+import 'package:bamx_app/src/model/news.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -59,6 +60,29 @@ class FirebaseDataSource {
       });
     } else {
       cartItems[itemIndex]['cantidad']++;
+    }
+    await firestore.collection('carts').doc(user.uid).set({
+      'items': cartItems,
+    });
+  }
+
+  ///Delete item to user's cart
+  ///If the item is already in the cart, decrease the quantity
+  ///If the item is not in the cart, subtract it
+  Future<void> deleteItemToCart(ItemDonacion item) async {
+    final user = currentUser;
+    final cart = await firestore.collection('carts').doc(user.uid).get();
+    final cartItems = cart.data()?['items'] as List<dynamic>? ?? [];
+    final itemIndex = cartItems.indexWhere((element) => element['id'] == item.id);
+    if (itemIndex == -1) {
+      cartItems.add({
+        'id': item.id,
+        'cantidad': 1,
+      });
+    } else if(cartItems[itemIndex]['cantidad'] == 1){
+      cartItems[itemIndex]['cantidad'] = 1;
+    }else {
+      cartItems[itemIndex]['cantidad']--;
     }
     await firestore.collection('carts').doc(user.uid).set({
       'items': cartItems,
@@ -138,6 +162,37 @@ class FirebaseDataSource {
     cartItems.removeAt(itemIndex);
     await firestore.collection('carts').doc(user.uid).set({
       'items': cartItems,
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ///Get all the news from the collection "news"
+  ///Returns a stream of News
+  Stream<Iterable<News>> getNews() {
+    return firestore.collection('news').snapshots().map((snapshot) {
+      return snapshot.docs
+        .map((doc) => News.fromMap(doc.id, doc.data()))
+        .toList(); // Convert to list
     });
   }
 }
