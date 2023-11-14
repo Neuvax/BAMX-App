@@ -7,8 +7,7 @@ import 'package:bamx_app/src/model/donation_group.dart';
 class DonationInformationPage extends StatelessWidget {
   final DonationGroup donationGroup;
 
-  const DonationInformationPage({Key? key, required this.donationGroup})
-      : super(key: key);
+  const DonationInformationPage({super.key, required this.donationGroup});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class DonationInformationPage extends StatelessWidget {
             const SizedBox(height: 24), // For spacing
             Text(
               '#${donationGroup.donationId.toString()}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -50,7 +49,7 @@ class DonationInformationPage extends StatelessWidget {
                 ),
                 child: Text(
                   donationGroup.donationStatus,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
@@ -73,7 +72,7 @@ class DonationInformationPage extends StatelessWidget {
             // Add your text details here
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: donationGroup.donationItems.length,
               itemBuilder: (context, index) {
                 final donacionItem = donationGroup.donationItems[index];

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:bamx_app/src/cubits/historial_cubit.dart';
 import 'package:bamx_app/src/model/donation_group.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bamx_app/src/pages/donation_information_page.dart';
 
 class HistorialPage extends StatelessWidget {
   const HistorialPage({super.key});
