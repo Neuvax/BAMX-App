@@ -134,21 +134,18 @@ class UserProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (firebaseUser?.providerData[0].providerId != 'google.com')
-                    if (!is2FASetup)
-                      Column(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                Routes.twoFactorAuth,
-                              );
-                            },
-                            child: const Text('Configurar 2FA'),
-                          )
-                        ],
-                      ),
+                  Visibility(
+                    visible: (!is2FASetup &&
+                        firebaseUser?.providerData[0].providerId !=
+                            'google.com'),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, Routes.twoFactorAuth);
+                        is2FASetup = true;
+                      },
+                      child: const Text('2FA Button'),
+                    ),
+                  ),
                   OutlinedButton(
                     onPressed: () {
                       // Handle the click event for Aviso de Privacidad here
