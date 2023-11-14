@@ -17,6 +17,24 @@ class HistorialPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: BlocBuilder<HistorialCubit, HistorialState>(
           builder: (context, state) {
+            // Comprobación si los arrays están vacíos
+            if (state.pendientes.isEmpty &&
+                state.aprobadas.isEmpty &&
+                state.rechazadas.isEmpty) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text(
+                    "No hay donaciones existentes",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              );
+            }
+
             if (!state.isLoading) {
               List<Widget> donationSections = [];
 
