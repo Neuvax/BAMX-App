@@ -5,8 +5,10 @@ import 'package:bamx_app/src/pages/layout_page.dart';
 import 'package:bamx_app/src/pages/news_page.dart';
 import 'package:bamx_app/src/pages/sign_in.dart';
 import 'package:bamx_app/src/pages/sign_up.dart';
+import 'package:bamx_app/src/pages/donation_information_page.dart';
 import 'package:bamx_app/src/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:bamx_app/src/model/donation_group.dart';
 
 class Routes {
   /// Route names
@@ -17,6 +19,7 @@ class Routes {
   static const String cart = '/cart';
   static const String userProfile = '/userProfile';
   static const String donationConfirmation = '/donationConfirmation';
+  static const String donationInformationPage = '/donationInformationPage';
 
   static const String news = '/news';
 
@@ -25,6 +28,7 @@ class Routes {
     MaterialPageRoute buildRoute(Widget widget) {
       return MaterialPageRoute(builder: (_) => widget, settings: settings);
     }
+
     switch (settings.name) {
       case home:
         return buildRoute(const LayoutPage());
@@ -40,8 +44,10 @@ class Routes {
         return buildRoute(const UserProfilePage());
       case donationConfirmation:
         return buildRoute(const DonationConformationPage());
-
-      
+      case donationInformationPage:
+        final DonationGroup donationGroup = settings.arguments as DonationGroup;
+        return buildRoute(
+            DonationInformationPage(donationGroup: donationGroup));
       case news:
         return buildRoute(const NewsPage());
       default:

@@ -28,10 +28,11 @@ class AuthCubit extends Cubit<CurrentAuthState> {
 
   /// Initializes the cubit and listens to the authentication state changes.
   Future<void> init() async {
-    _authSubscription = _authRepository.onAuthStateChanged.listen(_authStateChanged);
+    _authSubscription =
+        _authRepository.onAuthStateChanged.listen(_authStateChanged);
   }
 
-  void resetMessage () {
+  void resetMessage() {
     emit(const CurrentAuthState(Status.signedIn, null));
   }
 
@@ -62,12 +63,12 @@ class AuthCubit extends Cubit<CurrentAuthState> {
   Future<void> deleteUser() async {
     await _authRepository.deleteUser();
   }
-  
 
   /// Signs in the user with email and password and throws an error if the sign in fails.
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
-      emit(const CurrentAuthState(Status.error, 'El correo electrónico y contraseña son requeridos.'));
+      emit(const CurrentAuthState(
+          Status.error, 'El correo electrónico y contraseña son requeridos.'));
       return;
     }
     try {
@@ -75,47 +76,63 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
-          emit(const CurrentAuthState(Status.error, 'No se encontró ningún usuario con ese correo electrónico.'));
+          emit(const CurrentAuthState(Status.error,
+              'El correo electrónico o contraseña no son válidos.'));
           break;
         case 'wrong-password':
-          emit(const CurrentAuthState(Status.error, 'El correo electrónico o contraseña no son válidos.'));
+          emit(const CurrentAuthState(Status.error,
+              'El correo electrónico o contraseña no son válidos.'));
           break;
         case 'invalid-email':
-          emit(const CurrentAuthState(Status.error, 'El correo electrónico o contraseña no son válidos.'));
+          emit(const CurrentAuthState(Status.error,
+              'El correo electrónico o contraseña no son válidos.'));
           break;
         default:
-          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Ocurrió un error desconocido.'));
           break;
       }
     } catch (e) {
-      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+      emit(
+          const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
     }
   }
 
   /// Signs up the user with email and password and throws an error if the sign up fails.
-  Future<void> signUpWithEmailAndPassword(String name, String email, String password, String confirmPassword) async {
-    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      emit(const CurrentAuthState(Status.error, 'Todos los campos son requeridos.'));
+  Future<void> signUpWithEmailAndPassword(String name, String email,
+      String password, String confirmPassword) async {
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
+      emit(const CurrentAuthState(
+          Status.error, 'Todos los campos son requeridos.'));
       return;
     } else if (password != confirmPassword) {
-      emit(const CurrentAuthState(Status.error, 'Las contraseñas no coinciden.'));
+      emit(const CurrentAuthState(
+          Status.error, 'Las contraseñas no coinciden.'));
       return;
     }
 
     if (password.length < 10) {
-      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos 10 caracteres.'));
+      emit(const CurrentAuthState(
+          Status.error, 'La contraseña debe tener al menos 10 caracteres.'));
       return;
     } else if (!password.contains(RegExp(r'[A-Z]'))) {
-      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos una letra mayúscula.'));
+      emit(const CurrentAuthState(Status.error,
+          'La contraseña debe tener al menos una letra mayúscula.'));
       return;
     } else if (!password.contains(RegExp(r'[a-z]'))) {
-      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos una letra minúscula.'));
+      emit(const CurrentAuthState(Status.error,
+          'La contraseña debe tener al menos una letra minúscula.'));
       return;
     } else if (!password.contains(RegExp(r'[0-9]'))) {
-      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos un número.'));
+      emit(const CurrentAuthState(
+          Status.error, 'La contraseña debe tener al menos un número.'));
       return;
     } else if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>\-_]'))) {
-      emit(const CurrentAuthState(Status.error, 'La contraseña debe tener al menos un caracter especial.'));
+      emit(const CurrentAuthState(Status.error,
+          'La contraseña debe tener al menos un caracter especial.'));
       return;
     }
 
@@ -124,17 +141,21 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'email-already-in-use':
-          emit(const CurrentAuthState(Status.error, 'Error al registrar la cuenta.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Error al registrar la cuenta.'));
           break;
         case 'invalid-email':
-          emit(const CurrentAuthState(Status.error, 'El correo electrónico o contraseña no son válidos.'));
+          emit(const CurrentAuthState(Status.error,
+              'El correo electrónico o contraseña no son válidos.'));
           break;
         default:
-          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Ocurrió un error desconocido.'));
           break;
       }
     } catch (e) {
-      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+      emit(
+          const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
     }
 
     //Send email verification
@@ -144,26 +165,32 @@ class AuthCubit extends Cubit<CurrentAuthState> {
   /// Sends a password reset email to the user.
   Future<void> sendPasswordResetEmail(String email) async {
     if (email.isEmpty) {
-      emit(const CurrentAuthState(Status.error, 'El correo electrónico es requerido.'));
+      emit(const CurrentAuthState(
+          Status.error, 'El correo electrónico es requerido.'));
       return;
     } else if (!email.contains('@')) {
-      emit(const CurrentAuthState(Status.error, 'El correo electrónico no es válido.'));
+      emit(const CurrentAuthState(
+          Status.error, 'El correo electrónico no es válido.'));
       return;
     }
     try {
       await _authRepository.sendPasswordResetEmail(email);
-      emit(const CurrentAuthState(Status.success, 'Se envió un correo de recuperación a su cuenta.'));
+      emit(const CurrentAuthState(
+          Status.success, 'Se envió un correo de recuperación a su cuenta.'));
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
-          emit(const CurrentAuthState(Status.error, 'Error al enviar el correo de recuperación.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Error al enviar el correo de recuperación.'));
           break;
         default:
-          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Ocurrió un error desconocido.'));
           break;
       }
     } catch (e) {
-      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+      emit(
+          const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
     }
   }
 
@@ -175,18 +202,22 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
     try {
       await _authRepository.updateDisplayName(name);
-      emit(const CurrentAuthState(Status.success, 'Nombre actualizado correctamente.'));
+      emit(const CurrentAuthState(
+          Status.success, 'Nombre actualizado correctamente.'));
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
-          emit(const CurrentAuthState(Status.error, 'Error al actualizar el nombre.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Error al actualizar el nombre.'));
           break;
         default:
-          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Ocurrió un error desconocido.'));
           break;
       }
     } catch (e) {
-      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+      emit(
+          const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
     }
   }
 
@@ -195,26 +226,33 @@ class AuthCubit extends Cubit<CurrentAuthState> {
   Future<void> updateProfilePicture(String path, File image) async {
     final uid = _authRepository.getCurrentUserUID;
     if (uid == null) {
-      emit(const CurrentAuthState(Status.error, 'Error al actualizar la imagen.'));
-      return;    
+      emit(const CurrentAuthState(
+          Status.error, 'Error al actualizar la imagen.'));
+      return;
     }
     try {
-      final url = await _authRepository.pushImageToFirebaseStorage(uid, path, image);
+      final url =
+          await _authRepository.pushImageToFirebaseStorage(uid, path, image);
       await _authRepository.updateProfilePicture(url);
-      emit(const CurrentAuthState(Status.success, 'Imagen actualizada correctamente.'));
+      emit(const CurrentAuthState(
+          Status.success, 'Imagen actualizada correctamente.'));
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
-          emit(const CurrentAuthState(Status.error, 'Error al actualizar la imagen.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Error al actualizar la imagen.'));
           break;
         default:
-          emit(const CurrentAuthState(Status.error, 'Ocurrió un error desconocido.'));
+          emit(const CurrentAuthState(
+              Status.error, 'Ocurrió un error desconocido.'));
           break;
       }
     } catch (e) {
-      emit(const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
+      emit(
+          const CurrentAuthState(Status.error, 'Ocurrió un error inesperado.'));
     }
   }
+
   /// Resets the error message.
   Future<void> reset() async {
     emit(const CurrentAuthState(Status.signedOut, null));
@@ -231,5 +269,4 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     _authSubscription?.cancel();
     return super.close();
   }
-
 }
