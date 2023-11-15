@@ -13,8 +13,6 @@ class UserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool is2FASetup = false;
-
     final FirebaseAuth auth = FirebaseAuth.instance;
     User? firebaseUser = auth.currentUser;
 
@@ -93,21 +91,53 @@ class UserProfilePage extends StatelessWidget {
                             }
                           },
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            context.read<AuthCubit>().sendPasswordResetEmail(
-                                context
-                                    .read<AuthCubit>()
-                                    .getCurrentUserEmail()
-                                    .toString());
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(3.0),
-                            child: Text(
-                              'Restablecer Contraseña',
-                              style: TextStyle(color: Colors.blue),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<AuthCubit>()
+                                        .sendPasswordResetEmail(context
+                                            .read<AuthCubit>()
+                                            .getCurrentUserEmail()
+                                            .toString());
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(3.0),
+                                    child: Text(
+                                      'Restablecer Contraseña',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: (firebaseUser
+                                          ?.providerData[0].providerId !=
+                                      'google.com'),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.twoFactorAuth);
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(3.0),
+                                      child: Text(
+                                        'Configurar 2FA',
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+                          ],
                         ),
                         BlocBuilder<AuthCubit, CurrentAuthState>(
                           builder: (context, state) {
@@ -134,22 +164,9 @@ class UserProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Visibility(
-                    visible: (!is2FASetup &&
-                        firebaseUser?.providerData[0].providerId !=
-                            'google.com'),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, Routes.twoFactorAuth);
-                        is2FASetup = true;
-                      },
-                      child: const Text('2FA Button'),
-                    ),
-                  ),
                   OutlinedButton(
                     onPressed: () {
                       // Handle the click event for Aviso de Privacidad here
-                      // E.g., navigate to a Privacy Notice screen
                     },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.black),
@@ -171,15 +188,12 @@ class UserProfilePage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
                       textStyle: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     child: const Text('Cerrar Sesión',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700)),
+                        style: TextStyle(color: Colors.white)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 120),
