@@ -3,21 +3,16 @@ import 'package:flutter/material.dart';
 
 class BottomNavigation extends StatefulWidget {
   final int currentIndex;
+  final List<(IconData, String)> icons;
   final void Function(int) onTap;
   const BottomNavigation(
-      {required this.currentIndex, required this.onTap, super.key});
+      {required this.currentIndex, required this.onTap, super.key, required this.icons});
 
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  final _icons = [
-    (Icons.home, "Principal"),
-    (Icons.favorite_border, "Donaciones"),
-    (Icons.history, "Historial"),
-    (Icons.star_border, "Recompensas")
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +32,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
         selectedItemColor: MyColors.primary,
         iconSize: 27.0,
         items: List.generate(
-            _icons.length,
+            widget.icons.length,
             (index) => BottomNavigationBarItem(
-                icon: Icon(_icons[index].$1), label: _icons[index].$2)),
+                icon: Icon(widget.icons[index].$1), label: widget.icons[index].$2)),
       ),
     );
   }

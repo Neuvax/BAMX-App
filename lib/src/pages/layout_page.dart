@@ -20,6 +20,12 @@ class _LayoutPageState extends State<LayoutPage> {
     const HistorialPage(),
     const RewardsPage(),
   ];
+    final _icons = [
+    (Icons.home, "Principal"),
+    (Icons.favorite_border, "Donaciones"),
+    (Icons.history, "Historial"),
+    (Icons.star_border, "Recompensas")
+  ];
 
   int _currentIndex = 0;
   void onBottomTap(int index) {
@@ -32,7 +38,7 @@ class _LayoutPageState extends State<LayoutPage> {
     return Scaffold(
       appBar: const MyAppBar(),
       body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigation(currentIndex: _currentIndex, onTap: onBottomTap)
+      bottomNavigationBar: BottomNavigation(currentIndex: _currentIndex, onTap: onBottomTap, icons: _icons,)
     );
   }
 }
