@@ -2,11 +2,14 @@ import 'package:bamx_app/src/pages/cart_page.dart';
 import 'package:bamx_app/src/pages/donation_confirmation_page.dart';
 import 'package:bamx_app/src/pages/forgot_password.dart';
 import 'package:bamx_app/src/pages/layout_page.dart';
+import 'package:bamx_app/src/pages/news_page.dart';
 import 'package:bamx_app/src/pages/sign_in.dart';
 import 'package:bamx_app/src/pages/sign_up.dart';
 import 'package:bamx_app/src/pages/two_factor_page.dart';
+import 'package:bamx_app/src/pages/donation_information_page.dart';
 import 'package:bamx_app/src/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:bamx_app/src/model/donation_group.dart';
 
 class Routes {
   /// Route names
@@ -18,6 +21,8 @@ class Routes {
   static const String userProfile = '/userProfile';
   static const String donationConfirmation = '/donationConfirmation';
   static const String twoFactorAuth = '/twoFactorAuth';
+  static const String donationInformationPage = '/donationInformationPage';
+  static const String news = '/news';
 
   /// Route generator
   static Route routes(RouteSettings settings) {
@@ -42,6 +47,12 @@ class Routes {
         return buildRoute(const DonationConformationPage());
       case twoFactorAuth:
         return buildRoute(const TwoFactorAuthPage());
+      case donationInformationPage:
+        final DonationGroup donationGroup = settings.arguments as DonationGroup;
+        return buildRoute(
+            DonationInformationPage(donationGroup: donationGroup));
+      case news:
+        return buildRoute(const NewsPage());
       default:
         throw Exception('La ruta: ${settings.name} no existe');
     }
