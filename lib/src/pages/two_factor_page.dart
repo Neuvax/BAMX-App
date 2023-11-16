@@ -12,7 +12,7 @@ class TwoFactorAuthPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Two Factor Authentication'),
+        title: const Text('Autentificacion de 2 factores'),
       ),
       body: BlocListener<AuthCubit, CurrentAuthState>(
         listener: (context, state) {
@@ -40,7 +40,8 @@ class TwoFactorAuthPage extends StatelessWidget {
                 TextField(
                   controller: phoneNumberController,
                   decoration: const InputDecoration(
-                    labelText: 'Phone Number',
+                    labelText: 'Numero de telefono',
+                    hintText: 'Ejemplo: +52 55 5555 5555',
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     border: OutlineInputBorder(
@@ -55,13 +56,13 @@ class TwoFactorAuthPage extends StatelessWidget {
                         .read<AuthCubit>()
                         .enrollSecondFactor(phoneNumberController.text);
                   },
-                  child: const Text('Configurar 2FA'),
+                  child: const Text('Enviar codigo SMS'),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: verificationCodeController,
                   decoration: const InputDecoration(
-                    labelText: 'Verification Code',
+                    labelText: 'Codigo de verificacion',
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     border: OutlineInputBorder(
@@ -77,7 +78,7 @@ class TwoFactorAuthPage extends StatelessWidget {
                     context.read<AuthCubit>().verifySecondFactor(
                         verificationId!, verificationCodeController.text);
                   },
-                  child: const Text('Verificar 2FA'),
+                  child: const Text('Verificar telefono'),
                 ),
               ],
             ),
