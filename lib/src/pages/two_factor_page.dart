@@ -12,7 +12,7 @@ class TwoFactorAuthPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Autentificacion de 2 factores'),
+        title: const Text('Autentificación de 2 factores'),
       ),
       body: BlocListener<AuthCubit, CurrentAuthState>(
         listener: (context, state) {
@@ -40,7 +40,7 @@ class TwoFactorAuthPage extends StatelessWidget {
                 TextField(
                   controller: phoneNumberController,
                   decoration: const InputDecoration(
-                    labelText: 'Numero de telefono',
+                    labelText: 'Número de teléfono',
                     hintText: 'Ejemplo: +52 55 5555 5555',
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -56,13 +56,13 @@ class TwoFactorAuthPage extends StatelessWidget {
                         .read<AuthCubit>()
                         .enrollSecondFactor(phoneNumberController.text);
                   },
-                  child: const Text('Enviar codigo SMS'),
+                  child: const Text('Enviar código SMS'),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: verificationCodeController,
                   decoration: const InputDecoration(
-                    labelText: 'Codigo de verificacion',
+                    labelText: 'Código de verificación',
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     border: OutlineInputBorder(
@@ -78,7 +78,7 @@ class TwoFactorAuthPage extends StatelessWidget {
                     context.read<AuthCubit>().verifySecondFactor(
                         verificationId!, verificationCodeController.text);
                   },
-                  child: const Text('Verificar telefono'),
+                  child: const Text('Verificar teléfono'),
                 ),
               ],
             ),
