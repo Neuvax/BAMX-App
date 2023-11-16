@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:bamx_app/src/model/donacion_item.dart';
 
 class DonationGroup extends Equatable {
-  final int donationId;
+  final String donationId;
   final String donationStatus;
   final int totalPoints;
   final DateTime donationDate;
@@ -20,13 +20,13 @@ class DonationGroup extends Equatable {
   List<Object> get props =>
       [donationId, totalPoints, donationDate, donationItems];
 
-  factory DonationGroup.fromMap(Map<String, dynamic> data) {
+  factory DonationGroup.fromMap(String id, Map<String, dynamic> data) {
     var donationItems = (data['donationsItems'] as List<dynamic>)
         .map((item) => DonacionItem.fromMap(item as Map<String, dynamic>))
         .toList();
 
     return DonationGroup(
-      donationId: data['donationId'],
+      donationId: id,
       donationStatus: data['donationsStatus'],
       totalPoints: data['totalPoints'],
       donationDate: DateTime.parse(data['donationDate']),

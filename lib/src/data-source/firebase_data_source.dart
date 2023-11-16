@@ -113,7 +113,6 @@ class FirebaseDataSource {
   }
 
   // Get all current user donations in all the categories
-  // Get all current user donations in all the categories
   Stream<UserDonations> getUserDonations() {
     return Stream.fromFuture(Future.wait([
       firestore
@@ -134,15 +133,15 @@ class FirebaseDataSource {
     ]).then((results) {
       final pendientes = results[0]
           .docs
-          .map((doc) => DonationGroup.fromMap(doc.data()))
+          .map((doc) => DonationGroup.fromMap(doc.id, doc.data()))
           .toList();
       final aprobadas = results[1]
           .docs
-          .map((doc) => DonationGroup.fromMap(doc.data()))
+          .map((doc) => DonationGroup.fromMap(doc.id, doc.data()))
           .toList();
       final rechazadas = results[2]
           .docs
-          .map((doc) => DonationGroup.fromMap(doc.data()))
+          .map((doc) => DonationGroup.fromMap(doc.id, doc.data()))
           .toList();
 
       return UserDonations(
@@ -162,7 +161,7 @@ class FirebaseDataSource {
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
-          .map((doc) => DonationGroup.fromMap(doc.data()))
+          .map((doc) => DonationGroup.fromMap(doc.id, doc.data()))
           .toList();
     });
   }
