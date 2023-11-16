@@ -79,18 +79,18 @@ class AuthCubit extends Cubit<CurrentAuthState> {
         return AlertDialog(
           title: const Text('Codigo SMS:'),
           actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Ingresar'),
-            ),
             OutlinedButton(
               onPressed: () {
                 smsCode = null;
                 Navigator.of(context).pop();
               },
               child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ingresar'),
             ),
           ],
           content: Container(
