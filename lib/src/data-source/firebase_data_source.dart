@@ -73,15 +73,16 @@ class FirebaseDataSource {
     final user = currentUser;
     final cart = await firestore.collection('carts').doc(user.uid).get();
     final cartItems = cart.data()?['items'] as List<dynamic>? ?? [];
-    final itemIndex = cartItems.indexWhere((element) => element['id'] == item.id);
+    final itemIndex =
+        cartItems.indexWhere((element) => element['id'] == item.id);
     if (itemIndex == -1) {
       cartItems.add({
         'id': item.id,
         'cantidad': 1,
       });
-    } else if(cartItems[itemIndex]['cantidad'] == 1){
+    } else if (cartItems[itemIndex]['cantidad'] == 1) {
       cartItems[itemIndex]['cantidad'] = 1;
-    }else {
+    } else {
       cartItems[itemIndex]['cantidad']--;
     }
     await firestore.collection('carts').doc(user.uid).set({
@@ -112,43 +113,57 @@ class FirebaseDataSource {
   }
 
   // Get all current user donations in all the categories
+  // Get all current user donations in all the categories
   Stream<UserDonations> getUserDonations() {
-    return firestore
-        .collection('donations')
-        .doc(currentUser.uid)
-        .snapshots()
-        .map((snapshot) {
-      final pendientesData =
-          snapshot.data()?['pendientes'] as Map<String, dynamic>?;
-      final aprobadasData =
-          snapshot.data()?['aprobadas'] as Map<String, dynamic>?;
-      final rechazadasData =
-          snapshot.data()?['rechazadas'] as Map<String, dynamic>?;
-
-      final pendientes =
-          pendientesData != null ? DonationGroup.fromMap(pendientesData) : null;
-      final aprobadas =
-          aprobadasData != null ? DonationGroup.fromMap(aprobadasData) : null;
-      final rechazadas =
-          rechazadasData != null ? DonationGroup.fromMap(rechazadasData) : null;
+    return Stream.fromFuture(Future.wait([
+      firestore
+          .collection('userDonations')
+          .doc(currentUser.uid)
+          .collection('pendientes')
+          .get(),
+      firestore
+          .collection('userDonations')
+          .doc(currentUser.uid)
+          .collection('aprobadas')
+          .get(),
+      firestore
+          .collection('userDonations')
+          .doc(currentUser.uid)
+          .collection('rechazadas')
+          .get(),
+    ]).then((results) {
+      final pendientes = results[0]
+          .docs
+          .map((doc) => DonationGroup.fromMap(doc.data()))
+          .toList();
+      final aprobadas = results[1]
+          .docs
+          .map((doc) => DonationGroup.fromMap(doc.data()))
+          .toList();
+      final rechazadas = results[2]
+          .docs
+          .map((doc) => DonationGroup.fromMap(doc.data()))
+          .toList();
 
       return UserDonations(
-        pendientes: pendientes != null ? [pendientes] : [],
-        aprobadas: aprobadas != null ? [aprobadas] : [],
-        rechazadas: rechazadas != null ? [rechazadas] : [],
+        pendientes: pendientes,
+        aprobadas: aprobadas,
+        rechazadas: rechazadas,
       );
-    });
+    }));
   }
 
   // Get user pending Donations for Home page quick view
   Stream<Iterable<DonationGroup>> getUserPendingDonations() {
     return firestore
-        .collection('donations')
+        .collection('userDonations')
         .doc(currentUser.uid)
+        .collection('pendientes')
         .snapshots()
         .map((snapshot) {
-      final pendientes = snapshot.data()?['pendientes'] as List<dynamic>? ?? [];
-      return pendientes.map((group) => DonationGroup.fromMap(group)).toList();
+      return snapshot.docs
+          .map((doc) => DonationGroup.fromMap(doc.data()))
+          .toList();
     });
   }
 
@@ -165,34 +180,13 @@ class FirebaseDataSource {
     });
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ///Get all the news from the collection "news"
   ///Returns a stream of News
   Stream<Iterable<News>> getNews() {
     return firestore.collection('news').snapshots().map((snapshot) {
       return snapshot.docs
-        .map((doc) => News.fromMap(doc.id, doc.data()))
-        .toList(); // Convert to list
+          .map((doc) => News.fromMap(doc.id, doc.data()))
+          .toList(); // Convert to list
     });
   }
 }
