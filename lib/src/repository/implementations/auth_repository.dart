@@ -105,4 +105,39 @@ class AuthRepositoryImp extends AuthRepository {
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
+
+  @override
+  Future<void> enrollSecondFactor(
+      String phoneNumber, Function(String, int?) codeSentCallback) async {
+    User? user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('No hay un usuario actualmente.');
+
+    final multiFactorSession = await user.multiFactor.getSession();
+    await _firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      multiFactorSession: multiFactorSession,
+      verificationCompleted: (PhoneAuthCredential credential) async {},
+      verificationFailed: (FirebaseAuthException e) {
+        throw e;
+      },
+      codeSent: codeSentCallback,
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
+
+  @override
+  Future<void> completeSecondFactorEnrollment(
+      String verificationId, String smsCode) async {
+    User? user = _firebaseAuth.currentUser;
+    if (user == null) throw Exception('No hay un usuario actualmente.');
+
+    final credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+
+    await user.multiFactor.enroll(
+      PhoneMultiFactorGenerator.getAssertion(credential),
+    );
+  }
 }

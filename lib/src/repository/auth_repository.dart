@@ -25,7 +25,8 @@ abstract class AuthRepository {
   Future<void> updateProfilePicture(String url);
 
   ///Push image to firebase storage
-  Future<String> pushImageToFirebaseStorage(String uid, String path, File image);  
+  Future<String> pushImageToFirebaseStorage(
+      String uid, String path, File image);
 
   /// Deletes the current user
   Future<void> deleteUser();
@@ -34,7 +35,8 @@ abstract class AuthRepository {
   Future<void> signInWithEmailAndPassword(String email, String password);
 
   ///Sign up with Email and Password
-  Future<void> signUpWithEmailAndPassword(String name, String email, String password);
+  Future<void> signUpWithEmailAndPassword(
+      String name, String email, String password);
 
   ///Forgot Password
   Future<void> sendPasswordResetEmail(String email);
@@ -44,4 +46,10 @@ abstract class AuthRepository {
 
   /// Signs out
   Future<void> signOut();
+
+  Future<void> enrollSecondFactor(
+      String phoneNumber, Function(String, int?) codeSentCallback);
+
+  Future<void> completeSecondFactorEnrollment(
+      String verificationId, String smsCode);
 }
