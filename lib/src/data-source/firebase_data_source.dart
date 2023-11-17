@@ -181,6 +181,33 @@ class FirebaseDataSource {
     });
   }
 
+  Future<DonationGroup> getPublicDonation(String donationId) async {
+    
+    String userId = "";
+    String status = "Pending";
+    //Search in collection donations for the donationId
+    await firestore
+        .collection('donations')
+        .doc(donationId)
+        .get()
+        .then((value) => {
+              if (value.exists)
+                {
+                  userId = value.data()?['userId'],
+                  status = value.data()?['status'],
+                }
+            });
+    //Search in collection userDonations, to get the donation data
+    return firestore
+        .collection('userDonations')
+        .doc(userId)
+        .collection(status)
+        .doc(donationId)
+        .get()
+        .then((value) => DonationGroup.fromMap(
+            donationId, status, value.data() as Map<String, dynamic>));
+  }
+
   ///Remove item from user's cart
   Future<void> removeItemFromCart(String itemId) async {
     final user = currentUser;
