@@ -133,15 +133,30 @@ class FirebaseDataSource {
     ]).then((results) {
       final pendientes = results[0]
           .docs
-          .map((doc) => DonationGroup.fromMap(doc.id, doc.data()))
+          .map((doc) => doc.data() != null
+              ? DonationGroup.fromMap(
+                  doc.id, "Pending", doc.data() as Map<String, dynamic>)
+              : null)
+          .where((donation) => donation != null)
+          .cast<DonationGroup>()
           .toList();
       final aprobadas = results[1]
           .docs
-          .map((doc) => DonationGroup.fromMap(doc.id, doc.data()))
+          .map((doc) => doc.data() != null
+              ? DonationGroup.fromMap(
+                  doc.id, "Approved", doc.data() as Map<String, dynamic>)
+              : null)
+          .where((donation) => donation != null)
+          .cast<DonationGroup>()
           .toList();
       final rechazadas = results[2]
           .docs
-          .map((doc) => DonationGroup.fromMap(doc.id, doc.data()))
+          .map((doc) => doc.data() != null
+              ? DonationGroup.fromMap(
+                  doc.id, "Rejected", doc.data() as Map<String, dynamic>)
+              : null)
+          .where((donation) => donation != null)
+          .cast<DonationGroup>()
           .toList();
 
       return UserDonations(
@@ -161,7 +176,7 @@ class FirebaseDataSource {
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
-          .map((doc) => DonationGroup.fromMap(doc.id, doc.data()))
+          .map((doc) => DonationGroup.fromMap(doc.id, "Pending", doc.data()))
           .toList();
     });
   }

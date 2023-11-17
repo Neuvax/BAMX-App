@@ -20,14 +20,15 @@ class DonationGroup extends Equatable {
   List<Object> get props =>
       [donationId, totalPoints, donationDate, donationItems];
 
-  factory DonationGroup.fromMap(String id, Map<String, dynamic> data) {
+  factory DonationGroup.fromMap(
+      String id, String Status, Map<String, dynamic> data) {
     var donationItems = (data['donationsItems'] as List<dynamic>)
         .map((item) => DonacionItem.fromMap(item as Map<String, dynamic>))
         .toList();
 
     return DonationGroup(
       donationId: id,
-      donationStatus: data['donationsStatus'],
+      donationStatus: Status,
       totalPoints: data['totalPoints'],
       donationDate: DateTime.parse(data['donationDate']),
       donationItems: donationItems,
