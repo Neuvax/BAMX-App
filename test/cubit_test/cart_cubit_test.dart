@@ -10,12 +10,29 @@ import 'package:mocktail/mocktail.dart';
 class MockCartRepository extends Mock implements CartRepository {}
 
 void main() {
+  registerFallbackValue(ItemDonacion(
+    id: '1',
+    nombre: 'nombre',
+    imagen: 'imagen',
+    unidad: 'unidad',
+    prioridad: 1,
+  ));
+
   late MockCartRepository mockCartRepository;
 
   setUp(() async {
     await getIt.reset();
     mockCartRepository = MockCartRepository();
     getIt.registerSingleton<CartRepository>(mockCartRepository);
+
+    when(() => mockCartRepository.addItemToCart(any()))
+        .thenAnswer((_) async => Future<void>.value());
+
+    when(() => mockCartRepository.removeItemFromCart(any()))
+        .thenAnswer((_) async => Future<void>.value());
+
+    when(() => mockCartRepository.deleteItemToCart(any()))
+        .thenAnswer((_) async => Future<void>.value());
   });
 
   blocTest<CartCubit, CartState>(
@@ -43,7 +60,7 @@ void main() {
     ],
   );
 
-  blocTest<CartCubit, CartState>(
+  blocTest<CartCubit, CartState>(//type 'Null' is not a subtype of type 'Future<void>' of 'function result'
     'addItemToCart calls CartRepository.addItemToCart',
     build: () => CartCubit(),
     act: (cubit) => cubit.addItemToCart(ItemDonacion(
@@ -58,7 +75,7 @@ void main() {
     },
   );
 
-  blocTest<CartCubit, CartState>(
+  blocTest<CartCubit, CartState>(//type 'Null' is not a subtype of type 'Future<void>' of 'function result'
     'removeItem calls CartRepository.removeItemFromCart',
     build: () => CartCubit(),
     act: (cubit) => cubit.removeItem('itemId'),
@@ -67,7 +84,7 @@ void main() {
     },
   );
 
-  blocTest<CartCubit, CartState>(
+  blocTest<CartCubit, CartState>(//type 'Null' is not a subtype of type 'Future<void>' of 'function result'
     'deleteItemToCart calls CartRepository.deleteItemToCart',
     build: () => CartCubit(),
     act: (cubit) => cubit.deleteItemToCart(ItemDonacion(
@@ -80,5 +97,5 @@ void main() {
     verify: (_) {
       verify(() => mockCartRepository.deleteItemToCart(any())).called(1);
     },
-  );
+  );  
 }

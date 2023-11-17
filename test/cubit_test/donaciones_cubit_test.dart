@@ -11,6 +11,16 @@ class MockItemDonacionRepository extends Mock implements ItemDonacionRepository 
 void main() {
   late MockItemDonacionRepository mockItemDonacionRepository;
 
+  setUpAll(() {
+    registerFallbackValue(ItemDonacion(
+      id: '1',
+      nombre: 'nombre',
+      imagen: 'imagen',
+      unidad: 'unidad',
+      prioridad: 1,
+    ));
+  });
+
   setUp(() async {
     await getIt.reset();
     mockItemDonacionRepository = MockItemDonacionRepository();
@@ -47,7 +57,11 @@ void main() {
 
   blocTest<ListaDonacionesPrioritariasCubit, ListaDonacionesState>(
     'addItemToCart calls ItemDonacionRepository.addItemToCart',
-    build: () => ListaDonacionesPrioritariasCubit(),
+    build: () {
+      when(() => mockItemDonacionRepository.addItemToCart(any()))
+          .thenAnswer((_) async => {});
+      return ListaDonacionesPrioritariasCubit();
+    },
     act: (cubit) => cubit.addItemToCart(ItemDonacion(
       id: '1',
       nombre: 'nombre',
@@ -62,7 +76,11 @@ void main() {
 
   blocTest<ListaDonacionesCubit, ListaDonacionesState>(
     'addItemToCart calls ItemDonacionRepository.addItemToCart',
-    build: () => ListaDonacionesCubit(),
+    build: () {
+      when(() => mockItemDonacionRepository.addItemToCart(any()))
+          .thenAnswer((_) async => {});
+      return ListaDonacionesCubit();
+    },
     act: (cubit) => cubit.addItemToCart(ItemDonacion(
       id: '1',
       nombre: 'nombre',

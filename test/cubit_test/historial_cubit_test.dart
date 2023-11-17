@@ -23,9 +23,9 @@ void main() {
     build: () {
       when(() => mockDonationRepository.getUserDonations())
           .thenAnswer((_) => Stream.fromIterable([UserDonations(
-            pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.now(), donationItems: [])],
-            aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.now(), donationItems: [])],
-            rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.now(), donationItems: [])],
+            pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.parse('1969-07-20 20:18:04Z') , donationItems: [])],
+            aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+            rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
           )]));
       return HistorialCubit();
     },
@@ -33,9 +33,9 @@ void main() {
     expect: () => [
       HistorialState(
         isLoading: false,
-        pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.now(), donationItems: [])],
-        aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.now(), donationItems: [])],
-        rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.now(), donationItems: [])],
+        pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+        aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+        rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
       ),
     ],
   );
@@ -44,30 +44,38 @@ void main() {
     'historialListener updates state correctly',
     build: () => HistorialCubit(),
     act: (cubit) => cubit.historialListener(UserDonations(
-      pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.now(), donationItems: [])],
-      aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.now(), donationItems: [])],
-      rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.now(), donationItems: [])],
+      pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+      aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+      rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
     )),
     expect: () => [
       HistorialState(
         isLoading: false,
-        pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.now(), donationItems: [])],
-        aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.now(), donationItems: [])],
-        rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.now(), donationItems: [])],
+        pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+        aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+        rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
       ),
     ],
   );
 
   blocTest<HistorialCubit, HistorialState>(
-  'close cancels the subscription',
-  build: () => HistorialCubit(),
-  act: (cubit) async {
-    await cubit.init();
-    await cubit.close();
-  },
-  verify: (_) {
-    verify(() => mockDonationRepository.getUserDonations().listen(any())).called(1);
-  },
-);
+    'close cancels the subscription',
+    build: () {
+      when(() => mockDonationRepository.getUserDonations())
+          .thenAnswer((_) => Stream.fromIterable([UserDonations(
+            pendientes: [DonationGroup(donationId: 1, donationStatus: 'pendiente', totalPoints: 100, donationDate: DateTime.parse('1969-07-20 20:18:04Z') , donationItems: [])],
+            aprobadas: [DonationGroup(donationId: 2, donationStatus: 'aprobada', totalPoints: 200, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+            rechazadas: [DonationGroup(donationId: 3, donationStatus: 'rechazada', totalPoints: 300, donationDate: DateTime.parse('1969-07-20 20:18:04Z'), donationItems: [])],
+          )]));
+      return HistorialCubit();
+    },
+    act: (cubit) async {
+      await cubit.init();
+      await cubit.close();
+    },
+    verify: (_) {
+      verify(() => mockDonationRepository.getUserDonations().listen(any())).called(1);
+    },
+  );
 
 }
