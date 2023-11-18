@@ -57,7 +57,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
                               if (donation != null) {
                                 toggleScanning();
                                 Navigator.pushNamed(
-                                    newContext, Routes.donationInformationPage,
+                                    newContext, Routes.verifyDonation,
                                     arguments: donation);
                               } else {
                                 toggleScanning();

@@ -6,8 +6,9 @@ import 'package:bamx_app/src/model/donation_group.dart';
 
 class DonationInformationPage extends StatelessWidget {
   final DonationGroup donationGroup;
+  final List<Widget>? children;
 
-  const DonationInformationPage({super.key, required this.donationGroup});
+  const DonationInformationPage({super.key, required this.donationGroup, this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +84,8 @@ class DonationInformationPage extends StatelessWidget {
                 );
               },
             ),
+            const SizedBox(height: 24),
+            if (children != null) ...children!,
             // Repeat TextDetailRow for each entry
           ],
         ),
