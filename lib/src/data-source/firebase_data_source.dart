@@ -172,7 +172,7 @@ class FirebaseDataSource {
     });
   }
 
-  Future<DonationGroup?> getPublicDonation(String donationId) async {
+  Future<(DonationGroup, String)?> getPublicDonation(String donationId) async {
     try {
       // Fetch donation data from the 'donations' collection
       var donationSnapshot =
@@ -201,8 +201,8 @@ class FirebaseDataSource {
       if (donationGroupSnapshot.exists &&
           donationGroupSnapshot.data() != null) {
         // Parse data if available
-        return DonationGroup.fromMap(
-            donationId, status, donationGroupSnapshot.data()!);
+        return (DonationGroup.fromMap(
+            donationId, status, donationGroupSnapshot.data()!), userId);
       } else {
         return null; // No donation group data found or data is null
       }
@@ -211,6 +211,13 @@ class FirebaseDataSource {
       return null;
     }
   }
+
+  ///Verify donation
+  ///If the donation is approved, the donation group is moved to the collection "aprobadas"
+  ///If the donation is rejected, the donation group is moved to the collection "rechazadas"
+  ///The user's points are updated
+  Future<void> verifyDonation(
+      DonationGroup donationGroup, bool isApproved) async {}
 
   ///Remove item from user's cart
   Future<void> removeItemFromCart(String itemId) async {

@@ -56,8 +56,10 @@ class Routes {
       case adminHome:
         return buildRoute(const AdminLayout());
       case verifyDonation:
-        final DonationGroup donationGroup = settings.arguments as DonationGroup;
-        return buildRoute(VerifyDonationPage(donationGroup: donationGroup));
+        final args = settings.arguments as Map<String, dynamic>;
+        final DonationGroup donationGroup = args['donationGroup'] as DonationGroup;
+        final String userId = args['userId'] as String;
+        return buildRoute(VerifyDonationPage(donationGroup: donationGroup, userId: userId,));
       default:
         throw Exception('La ruta: ${settings.name} no existe');
     }

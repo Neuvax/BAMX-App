@@ -18,7 +18,7 @@ class DonationsRepositoryImp extends DonationRepository {
   }
 
   @override
-  Future<DonationGroup?> getPublicDonation(String donationId) {
+  Future<(DonationGroup, String)?> getPublicDonation(String donationId) {
     return _firebaseDataSource.getPublicDonation(donationId);
   }
 }

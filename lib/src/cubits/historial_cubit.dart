@@ -26,7 +26,7 @@ class HistorialCubit extends Cubit<HistorialState> {
         rechazadas: userDonations.rechazadas));
   }
 
-  Future<DonationGroup?> getPublicDonation(String donationId) async {
+  Future<(DonationGroup, String)?> getPublicDonation(String donationId) async {
     return _historialRepository.getPublicDonation(donationId);
   }
 

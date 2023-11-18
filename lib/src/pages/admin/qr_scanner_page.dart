@@ -58,7 +58,10 @@ class _QRScannerPageState extends State<QRScannerPage> {
                                 toggleScanning();
                                 Navigator.pushNamed(
                                     newContext, Routes.verifyDonation,
-                                    arguments: donation);
+                                    arguments: {
+                                      'donationGroup': donation.$1,
+                                      'userId': donation.$2
+                                    });
                               } else {
                                 toggleScanning();
                                 ScaffoldMessenger.of(context).showSnackBar(

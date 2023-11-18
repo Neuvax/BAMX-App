@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 class VerifyDonationPage extends StatefulWidget {
   final DonationGroup donationGroup;
-  const VerifyDonationPage({super.key, required this.donationGroup});
+  final String userId;
+  const VerifyDonationPage({super.key, required this.donationGroup, required this.userId});
 
   @override
   State<VerifyDonationPage> createState() => _VerifyDonationPageState();
