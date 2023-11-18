@@ -91,6 +91,7 @@ class _VerifyDonationPageState extends State<VerifyDonationPage> {
             ),
           ),
         ),
+        const SizedBox(height: 24),
       ],
     );
   }
