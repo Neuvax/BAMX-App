@@ -72,7 +72,7 @@ class ListItem extends StatefulWidget {
   const ListItem({super.key, required this.item, required this.quantity});
 
   @override
-  _ListItemState createState() => _ListItemState();
+  State<ListItem> createState() => _ListItemState();
 }
 
 class _ListItemState extends State<ListItem> {
