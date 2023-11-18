@@ -12,41 +12,74 @@ class QRScannerPage extends StatefulWidget {
 }
 
 class _QRScannerPageState extends State<QRScannerPage> {
+  late MobileScannerController cameraController;
+  bool isScanning = false;
+
+  @override
+  void initState() {
+    super.initState();
+    cameraController = MobileScannerController();
+  }
+
+  void toggleScanning() {
+    setState(() {
+      isScanning = !isScanning;
+      if (isScanning) {
+        cameraController.start();
+      } else {
+        cameraController.stop();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => HistorialCubit()..init(),
-      child: Center(
-        child: Builder(
-          // Using Builder here
-          builder: (newContext) {
-            // newContext can access HistorialCubit
-            return SizedBox(
-              height: 300,
-              width: 300,
-              child: MobileScanner(
-                onDetect: (barcodes) {
-                  newContext
-                      .read<HistorialCubit>()
-                      .getPublicDonation(barcodes.raw[0]["rawValue"])
-                      .then((donation) {
-                    if (donation != null) {
-                      Navigator.pushNamed(
-                          newContext, Routes.donationInformationPage,
-                          arguments: donation);
-                      //Close the scanner
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Donación no encontrada'),
-                        ),
-                      );
-                    }
-                  });
-                },
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 300,
+                width: 300,
+                child: isScanning
+                    ? Builder(builder: (newContext) {
+                        return MobileScanner(
+                          controller: cameraController,
+                          onDetect: (barcodes) {
+                            cameraController.stop();
+                            newContext
+                                .read<HistorialCubit>()
+                                .getPublicDonation(barcodes.raw[0]["rawValue"])
+                                .then((donation) {
+                              if (donation != null) {
+                                toggleScanning();
+                                Navigator.pushNamed(
+                                    newContext, Routes.donationInformationPage,
+                                    arguments: donation);
+                              } else {
+                                toggleScanning();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Donación no encontrada'),
+                                  ),
+                                );
+                              }
+                            });
+                          },
+                        );
+                      })
+                    : const SizedBox(width: 300, height: 300,)
               ),
-            );
-          },
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: toggleScanning,
+                child: Text(isScanning ? 'Detener escaneo' : 'Empezar a escanear'),
+              ),
+            ],
+          ),
         ),
       ),
     );
