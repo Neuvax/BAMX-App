@@ -181,32 +181,44 @@ class FirebaseDataSource {
     });
   }
 
-  Future<DonationGroup> getPublicDonation(String donationId) async {
-    
-    String userId = "";
-    String status = "Pending";
-    //Search in collection donations for the donationId
-    await firestore
-        .collection('donations')
-        .doc(donationId)
-        .get()
-        .then((value) => {
-              if (value.exists)
-                {
-                  userId = value.data()?['userId'],
-                  status = value.data()?['status'],
-                }
-            });
-    //Search in collection userDonations, to get the donation data
-    return firestore
+  Future<DonationGroup?> getPublicDonation(String donationId) async {
+  try {
+    // Fetch donation data from the 'donations' collection
+    var donationSnapshot = await firestore.collection('donations').doc(donationId).get();
+
+    if (!donationSnapshot.exists) {
+      return null; // No donation found with the given ID
+    }
+
+    // Extracting userId and status, with null checks
+    String? userId = donationSnapshot.data()?['userId'];
+    String? status = donationSnapshot.data()?['status'];
+
+    if (userId == null || status == null) {
+      return null; // userId or status is not available
+    }
+
+    // Fetching donation group data from the 'userDonations' collection
+    var donationGroupSnapshot = await firestore
         .collection('userDonations')
         .doc(userId)
         .collection(status)
         .doc(donationId)
-        .get()
-        .then((value) => DonationGroup.fromMap(
-            donationId, status, value.data() as Map<String, dynamic>));
+        .get();
+
+    if (donationGroupSnapshot.exists && donationGroupSnapshot.data() != null) {
+      // Parse data if available
+      return DonationGroup.fromMap(donationId, status, donationGroupSnapshot.data()!);
+    } else {
+      return null; // No donation group data found or data is null
+    }
+  } catch (e) {
+    // Handle any exceptions
+    print('Error fetching donation data: $e');
+    return null;
   }
+}
+
 
   ///Remove item from user's cart
   Future<void> removeItemFromCart(String itemId) async {
