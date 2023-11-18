@@ -49,7 +49,11 @@ class DonationInformationPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100), // Rounded corners
                 ),
                 child: Text(
-                  donationGroup.donationStatus,
+                  donationGroup.donationStatus[0] == 'p'
+                      ? 'Pendiente'
+                      : donationGroup.donationStatus[0] == 'a'
+                          ? 'Aprobada'
+                          : 'Rechazada',
                   style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -138,11 +142,11 @@ class TextDetailRow extends StatelessWidget {
 
 Color getStatusColor(String status) {
   switch (status) {
-    case 'Pending':
+    case 'pendientes':
       return MyColors.yellow;
-    case 'Approved':
+    case 'aprobadas':
       return MyColors.green;
-    case 'Rejected':
+    case 'rechazadas':
       return MyColors.primary;
     default:
       return MyColors
