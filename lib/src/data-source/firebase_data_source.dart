@@ -133,29 +133,20 @@ class FirebaseDataSource {
     ]).then((results) {
       final pendientes = results[0]
           .docs
-          .map((doc) => doc.data() != null
-              ? DonationGroup.fromMap(
-                  doc.id, "Pending", doc.data() as Map<String, dynamic>)
-              : null)
-          .where((donation) => donation != null)
+          .map((doc) => DonationGroup.fromMap(doc.id, "Pending", doc.data()))
+          // .where((donation) => donation != null)
           .cast<DonationGroup>()
           .toList();
       final aprobadas = results[1]
           .docs
-          .map((doc) => doc.data() != null
-              ? DonationGroup.fromMap(
-                  doc.id, "Approved", doc.data() as Map<String, dynamic>)
-              : null)
-          .where((donation) => donation != null)
+          .map((doc) => DonationGroup.fromMap(doc.id, "Approved", doc.data()))
+          // .where((donation) => donation != null)
           .cast<DonationGroup>()
           .toList();
       final rechazadas = results[2]
           .docs
-          .map((doc) => doc.data() != null
-              ? DonationGroup.fromMap(
-                  doc.id, "Rejected", doc.data() as Map<String, dynamic>)
-              : null)
-          .where((donation) => donation != null)
+          .map((doc) => DonationGroup.fromMap(doc.id, "Rejected", doc.data()))
+          // .where((donation) => donation != null)
           .cast<DonationGroup>()
           .toList();
 
@@ -182,43 +173,48 @@ class FirebaseDataSource {
   }
 
   Future<DonationGroup?> getPublicDonation(String donationId) async {
-  try {
-    // Fetch donation data from the 'donations' collection
-    var donationSnapshot = await firestore.collection('donations').doc(donationId).get();
+    try {
+      // Fetch donation data from the 'donations' collection
+      var donationSnapshot =
+          await firestore.collection('donations').doc(donationId).get();
 
-    if (!donationSnapshot.exists) {
-      return null; // No donation found with the given ID
+      if (!donationSnapshot.exists) {
+        return null; // No donation found with the given ID
+      }
+
+      // Extracting userId and status, with null checks
+      String? userId = donationSnapshot.data()?['userId'];
+      String? status = donationSnapshot.data()?['status'];
+
+      if (userId == null || status == null) {
+        return null; // userId or status is not available
+      }
+
+      // Fetching donation group data from the 'userDonations' collection
+      var donationGroupSnapshot = await firestore
+          .collection('userDonations')
+          .doc(userId)
+          .collection(status)
+          .doc(donationId)
+          .get();
+
+      //Print type of donationGroupSnapshot.data();
+      print(donationGroupSnapshot.data().runtimeType);
+
+      if (donationGroupSnapshot.exists &&
+          donationGroupSnapshot.data() != null) {
+        // Parse data if available
+        return DonationGroup.fromMap(
+            donationId, status, donationGroupSnapshot.data()!);
+      } else {
+        return null; // No donation group data found or data is null
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print('Error fetching donation data: $e');
+      return null;
     }
-
-    // Extracting userId and status, with null checks
-    String? userId = donationSnapshot.data()?['userId'];
-    String? status = donationSnapshot.data()?['status'];
-
-    if (userId == null || status == null) {
-      return null; // userId or status is not available
-    }
-
-    // Fetching donation group data from the 'userDonations' collection
-    var donationGroupSnapshot = await firestore
-        .collection('userDonations')
-        .doc(userId)
-        .collection(status)
-        .doc(donationId)
-        .get();
-
-    if (donationGroupSnapshot.exists && donationGroupSnapshot.data() != null) {
-      // Parse data if available
-      return DonationGroup.fromMap(donationId, status, donationGroupSnapshot.data()!);
-    } else {
-      return null; // No donation group data found or data is null
-    }
-  } catch (e) {
-    // Handle any exceptions
-    print('Error fetching donation data: $e');
-    return null;
   }
-}
-
 
   ///Remove item from user's cart
   Future<void> removeItemFromCart(String itemId) async {
