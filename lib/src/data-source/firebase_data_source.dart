@@ -177,7 +177,6 @@ class FirebaseDataSource {
       // Fetch donation data from the 'donations' collection
       var donationSnapshot =
           await firestore.collection('donations').doc(donationId).get();
-
       if (!donationSnapshot.exists) {
         return null; // No donation found with the given ID
       }
@@ -210,7 +209,6 @@ class FirebaseDataSource {
         return null; // No donation group data found or data is null
       }
     } catch (e) {
-      // Handle any exceptions
       return null;
     }
   }
@@ -230,6 +228,14 @@ class FirebaseDataSource {
         'status': isApproved ? 'aprobadas' : 'rechazadas',
       });
 
+      // Delete donation group from the 'pendientes' collection
+      await firestore
+          .collection('userDonations')
+          .doc(userId)
+          .collection(donationGroup.donationStatus)
+          .doc(donationGroup.donationId)
+          .delete();
+
       // Move donation group to the corresponding collection
       await firestore
           .collection('userDonations')
@@ -243,25 +249,23 @@ class FirebaseDataSource {
             .map((item) => {
                   'name': item.name,
                   'cantidad': item.cantidad,
-                  'points': item.puntos,
+                  'puntos': item.puntos,
                 })
             .toList(),
       });
 
-      // Delete donation group from the 'pendientes' collection
-      await firestore
-          .collection('userDonations')
-          .doc(userId)
-          .collection('pendientes')
-          .doc(donationGroup.donationId)
-          .delete();
-
-      // Update user points
-      await firestore.collection('users').doc(userId).set({
-        'puntos': FieldValue.increment(donationGroup.totalPoints),
-      }, SetOptions(merge: true));
+      // Update user points if donation is approved
+      if (isApproved && donationGroup.donationStatus != 'aprobadas') {
+        await firestore.collection('puntos').doc(userId).set({
+          'puntos': FieldValue.increment(donationGroup.totalPoints),
+        }, SetOptions(merge: true));
+      } else if (!isApproved && donationGroup.donationStatus == 'aprobadas') {
+        await firestore.collection('puntos').doc(userId).set({
+          'puntos': FieldValue.increment(-donationGroup.totalPoints),
+        }, SetOptions(merge: true));
+      }
     } catch (e) {
-      print(e);
+      // Handle any exceptions
       return;
     }
   }

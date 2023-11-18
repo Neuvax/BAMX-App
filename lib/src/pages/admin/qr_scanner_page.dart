@@ -37,51 +37,54 @@ class _QRScannerPageState extends State<QRScannerPage> {
     return BlocProvider(
       create: (_) => HistorialCubit()..init(),
       child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 300,
-                width: 300,
-                child: isScanning
-                    ? Builder(builder: (newContext) {
-                        return MobileScanner(
-                          controller: cameraController,
-                          onDetect: (barcodes) {
-                            cameraController.stop();
-                            newContext
-                                .read<HistorialCubit>()
-                                .getPublicDonation(barcodes.raw[0]["rawValue"])
-                                .then((donation) {
-                              if (donation != null) {
-                                toggleScanning();
-                                Navigator.pushNamed(
-                                    newContext, Routes.verifyDonation,
-                                    arguments: {
-                                      'donationGroup': donation.$1,
-                                      'userId': donation.$2
-                                    });
-                              } else {
-                                toggleScanning();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Donación no encontrada'),
-                                  ),
-                                );
-                              }
-                            });
-                          },
-                        );
-                      })
-                    : const SizedBox(width: 300, height: 300,)
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: toggleScanning,
-                child: Text(isScanning ? 'Detener escaneo' : 'Empezar a escanear'),
-              ),
-            ],
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 24),
+                SizedBox(
+                  height: 300,
+                  width: 300,
+                  child: isScanning
+                      ? Builder(builder: (newContext) {
+                          return MobileScanner(
+                            controller: cameraController,
+                            onDetect: (barcodes) {
+                              cameraController.stop();
+                              newContext
+                                  .read<HistorialCubit>()
+                                  .getPublicDonation(barcodes.raw[0]["rawValue"])
+                                  .then((donation) {
+                                if (donation != null) {
+                                  toggleScanning();
+                                  Navigator.pushNamed(
+                                      newContext, Routes.verifyDonation,
+                                      arguments: {
+                                        'donationGroup': donation.$1,
+                                        'userId': donation.$2
+                                      });
+                                } else {
+                                  toggleScanning();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Donación no encontrada'),
+                                    ),
+                                  );
+                                }
+                              });
+                            },
+                          );
+                        })
+                      : const SizedBox(width: 300, height: 300,)
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: toggleScanning,
+                  child: Text(isScanning ? 'Detener escaneo' : 'Empezar a escanear'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
