@@ -1,6 +1,7 @@
 import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/components/bottom_navigation.dart';
 import 'package:bamx_app/src/pages/admin/qr_scanner_page.dart';
+import 'package:bamx_app/src/pages/admin/update_items.dart';
 import 'package:flutter/material.dart';
 
 class AdminLayout extends StatefulWidget {
@@ -12,7 +13,7 @@ class AdminLayout extends StatefulWidget {
 
 class _AdminLayoutState extends State<AdminLayout> {
   final List<Widget> _pages = <Widget>[
-    const QRScannerPage(),
+    const UpdateItemsPage(),
     const QRScannerPage()
   ];
 
@@ -32,12 +33,11 @@ class _AdminLayoutState extends State<AdminLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const MyAppBar(),
-        body: _pages[0],
+        body: _pages[_currentIndex],
         bottomNavigationBar: BottomNavigation(
           currentIndex: _currentIndex,
           onTap: onBottomTap,
           icons: _icons,
-        )
-        );
+        ));
   }
 }
