@@ -30,6 +30,11 @@ class HistorialCubit extends Cubit<HistorialState> {
     return _historialRepository.getPublicDonation(donationId);
   }
 
+  Future<void> verifyDonation(
+      DonationGroup donationGroup, String userId, bool isApproved) async {
+    return _historialRepository.verifyDonation(donationGroup, userId, isApproved);
+  }
+
   @override
   Future<void> close() {
     _historialSubscription?.cancel();

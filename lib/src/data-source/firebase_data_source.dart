@@ -201,8 +201,11 @@ class FirebaseDataSource {
       if (donationGroupSnapshot.exists &&
           donationGroupSnapshot.data() != null) {
         // Parse data if available
-        return (DonationGroup.fromMap(
-            donationId, status, donationGroupSnapshot.data()!), userId);
+        return (
+          DonationGroup.fromMap(
+              donationId, status, donationGroupSnapshot.data()!),
+          userId
+        );
       } else {
         return null; // No donation group data found or data is null
       }
@@ -217,7 +220,51 @@ class FirebaseDataSource {
   ///If the donation is rejected, the donation group is moved to the collection "rechazadas"
   ///The user's points are updated
   Future<void> verifyDonation(
-      DonationGroup donationGroup, bool isApproved) async {}
+      DonationGroup donationGroup, String userId, bool isApproved) async {
+    try {
+      // Update donation status
+      await firestore
+          .collection('donations')
+          .doc(donationGroup.donationId)
+          .update({
+        'status': isApproved ? 'aprobadas' : 'rechazadas',
+      });
+
+      // Move donation group to the corresponding collection
+      await firestore
+          .collection('userDonations')
+          .doc(userId)
+          .collection(isApproved ? 'aprobadas' : 'rechazadas')
+          .doc(donationGroup.donationId)
+          .set({
+        'donationDate': donationGroup.donationDate.toIso8601String(),
+        'totalPoints': donationGroup.totalPoints,
+        'donationsItems': donationGroup.donationItems
+            .map((item) => {
+                  'name': item.name,
+                  'cantidad': item.cantidad,
+                  'points': item.puntos,
+                })
+            .toList(),
+      });
+
+      // Delete donation group from the 'pendientes' collection
+      await firestore
+          .collection('userDonations')
+          .doc(userId)
+          .collection('pendientes')
+          .doc(donationGroup.donationId)
+          .delete();
+
+      // Update user points
+      await firestore.collection('users').doc(userId).set({
+        'puntos': FieldValue.increment(donationGroup.totalPoints),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print(e);
+      return;
+    }
+  }
 
   ///Remove item from user's cart
   Future<void> removeItemFromCart(String itemId) async {

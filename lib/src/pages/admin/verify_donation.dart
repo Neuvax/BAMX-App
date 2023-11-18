@@ -1,12 +1,15 @@
+import 'package:bamx_app/src/cubits/historial_cubit.dart';
 import 'package:bamx_app/src/model/donation_group.dart';
 import 'package:bamx_app/src/pages/donation_information_page.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VerifyDonationPage extends StatefulWidget {
   final DonationGroup donationGroup;
   final String userId;
-  const VerifyDonationPage({super.key, required this.donationGroup, required this.userId});
+  const VerifyDonationPage(
+      {super.key, required this.donationGroup, required this.userId});
 
   @override
   State<VerifyDonationPage> createState() => _VerifyDonationPageState();
@@ -49,7 +52,8 @@ class _VerifyDonationPageState extends State<VerifyDonationPage> {
                 });
               },
               borderRadius: const BorderRadius.all(Radius.circular(8)),
-              selectedBorderColor: isSelected[0] ? MyColors.green : MyColors.primary,
+              selectedBorderColor:
+                  isSelected[0] ? MyColors.green : MyColors.primary,
               selectedColor: Colors.white,
               fillColor: isSelected[0] ? MyColors.green : MyColors.primary,
               color: isSelected[1] ? MyColors.green : MyColors.primary,
@@ -64,15 +68,28 @@ class _VerifyDonationPageState extends State<VerifyDonationPage> {
           ],
         ),
         const SizedBox(height: 24),
-        ElevatedButton(
-          onPressed: () {
-            if (isSelected[0]) {
-              Navigator.pop(context, true);
-            } else {
-              Navigator.pop(context, false);
-            }
-          },
-          child: const Text('Confirmar'),
+        BlocProvider(
+          create: (context) => HistorialCubit(),
+          child: BlocBuilder<HistorialCubit, HistorialState>(
+            builder: (context, state) => ElevatedButton(
+              onPressed: () {
+                context.read<HistorialCubit>().verifyDonation(
+                    widget.donationGroup, widget.userId, isSelected[0]);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Donación ${isSelected[0] ? 'aprobada' : 'rechazada'}',
+                    ),
+                  ),
+                );
+                //Wait for the snackbar to finish
+                Future.delayed(const Duration(seconds: 1), () {
+                  Navigator.of(context).pop();
+                });
+              },
+              child: const Text('Confirmar'),
+            ),
+          ),
         ),
       ],
     );
