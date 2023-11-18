@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:bamx_app/main.dart';
+import 'package:bamx_app/src/data-source/firebase_data_source.dart';
 import 'package:bamx_app/src/repository/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -10,6 +12,9 @@ class AuthRepositoryImp extends AuthRepository {
 
   /// Instance of Firebase authentication.
   final _firebaseAuth = FirebaseAuth.instance;
+  
+  final FirebaseDataSource _firebaseDataSource = getIt();
+
 
   ///Instance of Firebase storage.
   final _firebaseStorage = firebase_storage.FirebaseStorage.instance;
@@ -104,5 +109,11 @@ class AuthRepositoryImp extends AuthRepository {
   @override
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+  }
+
+  /// Checks if the current user is admin.
+  @override
+  Future<bool> getIsAdmin() async {
+    return await _firebaseDataSource.getIsAdmin();
   }
 }

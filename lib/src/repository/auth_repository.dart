@@ -44,4 +44,7 @@ abstract class AuthRepository {
 
   /// Signs out
   Future<void> signOut();
+
+  /// Check if user is admin
+  Future<bool> getIsAdmin();
 }

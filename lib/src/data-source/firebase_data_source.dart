@@ -234,4 +234,11 @@ class FirebaseDataSource {
           .toList(); // Convert to list
     });
   }
+
+  ///Get if user is admin
+  Future<bool> getIsAdmin() async {
+    final user = currentUser;
+    final admin = await firestore.collection('admins').doc(user.uid).get();
+    return admin.exists;
+  }
 }
