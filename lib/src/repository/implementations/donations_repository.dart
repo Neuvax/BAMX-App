@@ -16,4 +16,9 @@ class DonationsRepositoryImp extends DonationRepository {
   Stream<Iterable<DonationGroup>> getUserPendingDonations() {
     return _firebaseDataSource.getUserPendingDonations();
   }
+
+  @override
+  Future<DonationGroup?> getPublicDonation(String donationId) {
+    return _firebaseDataSource.getPublicDonation(donationId);
+  }
 }

@@ -21,14 +21,14 @@ class DonationGroup extends Equatable {
       [donationId, totalPoints, donationDate, donationItems];
 
   factory DonationGroup.fromMap(
-      String id, String Status, Map<String, dynamic> data) {
+      String id, String status, Map<String, dynamic> data) {
     var donationItems = (data['donationsItems'] as List<dynamic>)
         .map((item) => DonacionItem.fromMap(item as Map<String, dynamic>))
         .toList();
 
     return DonationGroup(
       donationId: id,
-      donationStatus: Status,
+      donationStatus: status,
       totalPoints: data['totalPoints'],
       donationDate: DateTime.parse(data['donationDate']),
       donationItems: donationItems,

@@ -198,9 +198,6 @@ class FirebaseDataSource {
           .doc(donationId)
           .get();
 
-      //Print type of donationGroupSnapshot.data();
-      print(donationGroupSnapshot.data().runtimeType);
-
       if (donationGroupSnapshot.exists &&
           donationGroupSnapshot.data() != null) {
         // Parse data if available
@@ -211,7 +208,6 @@ class FirebaseDataSource {
       }
     } catch (e) {
       // Handle any exceptions
-      print('Error fetching donation data: $e');
       return null;
     }
   }

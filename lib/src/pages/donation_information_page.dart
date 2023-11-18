@@ -97,11 +97,11 @@ class TextDetailRow extends StatelessWidget {
   final String quantity;
 
   const TextDetailRow({
-    Key? key,
+    super.key,
     required this.title,
     required this.points,
     required this.quantity,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
