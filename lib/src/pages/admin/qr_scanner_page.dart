@@ -78,9 +78,12 @@ class _QRScannerPageState extends State<QRScannerPage> {
                               },
                             );
                           })
-                        : const SizedBox(
+                        : Container(
                             width: 300,
                             height: 300,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                            ),
                           )),
                 const SizedBox(height: 16),
                 ElevatedButton(
