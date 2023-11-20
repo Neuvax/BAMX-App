@@ -4,13 +4,16 @@ import 'dart:io';
 import 'package:bamx_app/main.dart';
 import 'package:bamx_app/src/repository/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum Status {
   signedIn,
   signedOut,
+  loading,
   error,
   success,
+  codeSent,
 }
 
 class CurrentAuthState {
@@ -23,6 +26,7 @@ class CurrentAuthState {
 class AuthCubit extends Cubit<CurrentAuthState> {
   final AuthRepository _authRepository = getIt();
   StreamSubscription? _authSubscription;
+  String? _verificationId;
 
   AuthCubit() : super(const CurrentAuthState(Status.signedOut, null));
 
@@ -64,8 +68,51 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     await _authRepository.deleteUser();
   }
 
+  Future<String?> getSmsCodeFromUser(BuildContext context) async {
+    String? smsCode;
+
+    // Update the UI - wait for the user to enter the SMS code
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Codigo SMS:'),
+          actions: [
+            OutlinedButton(
+              onPressed: () {
+                smsCode = null;
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ingresar'),
+            ),
+          ],
+          content: Container(
+            padding: const EdgeInsets.all(20),
+            child: TextField(
+              onChanged: (value) {
+                smsCode = value;
+              },
+              textAlign: TextAlign.center,
+              autofocus: true,
+            ),
+          ),
+        );
+      },
+    );
+
+    return smsCode;
+  }
+
   /// Signs in the user with email and password and throws an error if the sign in fails.
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<void> signInWithEmailAndPassword(
+      String email, String password, BuildContext context) async {
     if (email.isEmpty || password.isEmpty) {
       emit(const CurrentAuthState(
           Status.error, 'El correo electrónico y contraseña son requeridos.'));
@@ -73,6 +120,39 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     }
     try {
       await _authRepository.signInWithEmailAndPassword(email, password);
+    } on FirebaseAuthMultiFactorException catch (e) {
+      final firstHint = e.resolver.hints.first;
+      if (firstHint is! PhoneMultiFactorInfo) {
+        return;
+      }
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        multiFactorSession: e.resolver.session,
+        multiFactorInfo: firstHint,
+        verificationCompleted: (_) {},
+        verificationFailed: (_) {},
+        codeSent: (String verificationId, int? resendToken) async {
+          final smsCode = await getSmsCodeFromUser(context);
+
+          if (smsCode != null) {
+            // Create a PhoneAuthCredential with the code
+            final credential = PhoneAuthProvider.credential(
+              verificationId: verificationId,
+              smsCode: smsCode,
+            );
+
+            try {
+              await e.resolver.resolveSignIn(
+                PhoneMultiFactorGenerator.getAssertion(
+                  credential,
+                ),
+              );
+            } on FirebaseAuthException catch (e) {
+              emit(e.message as CurrentAuthState);
+            }
+          }
+        },
+        codeAutoRetrievalTimeout: (_) {},
+      );
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -267,6 +347,64 @@ class AuthCubit extends Cubit<CurrentAuthState> {
   /// Check if user is admin
   Future<bool> isAdmin() async {
     return await _authRepository.getIsAdmin();
+
+  // Método para inscribir el segundo factor
+  Future<void> enrollSecondFactor(String phoneNumber) async {
+    emit(const CurrentAuthState(Status.loading, null));
+    try {
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw FirebaseAuthException(
+            code: 'no-user', message: 'No user is signed in.');
+      }
+
+      final multiFactorSession = await user.multiFactor.getSession();
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        multiFactorSession: multiFactorSession,
+        verificationCompleted: (PhoneAuthCredential credential) async {},
+        verificationFailed: (FirebaseAuthException e) {
+          emit(CurrentAuthState(Status.error, e.message));
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          _verificationId = verificationId;
+          emit(CurrentAuthState(Status.codeSent, 'Code sent to $phoneNumber'));
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+    } catch (e) {
+      emit(CurrentAuthState(
+          Status.error, 'Failed to enroll second factor: ${e.toString()}'));
+    }
+  }
+
+  String? getVerificationId() {
+    return _verificationId;
+  }
+
+  // Método para verificar el segundo factor durante la inscripción
+  Future<void> verifySecondFactor(String verificationId, String smsCode) async {
+    emit(const CurrentAuthState(Status.loading, null));
+    try {
+      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw FirebaseAuthException(
+            code: 'no-user', message: 'No user is signed in.');
+      }
+
+      await user.multiFactor
+          .enroll(PhoneMultiFactorGenerator.getAssertion(credential));
+      emit(const CurrentAuthState(
+          Status.success, 'Second factor enrolled successfully'));
+    } catch (e) {
+      emit(CurrentAuthState(
+          Status.error, 'Failed to verify second factor: ${e.toString()}'));
+    }
   }
 
   @override

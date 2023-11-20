@@ -7,6 +7,7 @@ import 'package:bamx_app/src/pages/layout_page.dart';
 import 'package:bamx_app/src/pages/news_page.dart';
 import 'package:bamx_app/src/pages/sign_in.dart';
 import 'package:bamx_app/src/pages/sign_up.dart';
+import 'package:bamx_app/src/pages/two_factor_page.dart';
 import 'package:bamx_app/src/pages/donation_information_page.dart';
 import 'package:bamx_app/src/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class Routes {
   static const String cart = '/cart';
   static const String userProfile = '/userProfile';
   static const String donationConfirmation = '/donationConfirmation';
+  static const String twoFactorAuth = '/twoFactorAuth';
   static const String donationInformationPage = '/donationInformationPage';
   static const String adminHome = '/adminHome';
   static const String verifyDonation = '/verifyDonation';
@@ -47,6 +49,8 @@ class Routes {
         return buildRoute(const UserProfilePage());
       case donationConfirmation:
         return buildRoute(const DonationConformationPage());
+      case twoFactorAuth:
+        return buildRoute(const TwoFactorAuthPage());
       case donationInformationPage:
         final DonationGroup donationGroup = settings.arguments as DonationGroup;
         return buildRoute(

@@ -86,7 +86,9 @@ class SignInPage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       context.read<AuthCubit>().signInWithEmailAndPassword(
-                          emailController.text, passwordController.text);
+                          emailController.text,
+                          passwordController.text,
+                          context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: MyColors.primary,
