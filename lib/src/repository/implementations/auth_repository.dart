@@ -12,9 +12,8 @@ class AuthRepositoryImp extends AuthRepository {
 
   /// Instance of Firebase authentication.
   final _firebaseAuth = FirebaseAuth.instance;
-  
-  final FirebaseDataSource _firebaseDataSource = getIt();
 
+  final FirebaseDataSource _firebaseDataSource = getIt();
 
   ///Instance of Firebase storage.
   final _firebaseStorage = firebase_storage.FirebaseStorage.instance;
@@ -115,6 +114,7 @@ class AuthRepositoryImp extends AuthRepository {
   @override
   Future<bool> getIsAdmin() async {
     return await _firebaseDataSource.getIsAdmin();
+  }
 
   @override
   Future<void> enrollSecondFactor(
