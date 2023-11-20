@@ -344,6 +344,11 @@ class AuthCubit extends Cubit<CurrentAuthState> {
     emit(const CurrentAuthState(Status.signedOut, null));
   }
 
+  /// Check if user is admin
+  Future<bool> isAdmin() async {
+    return await _authRepository.getIsAdmin();
+  }
+
   // Método para inscribir el segundo factor
   Future<void> enrollSecondFactor(String phoneNumber) async {
     emit(const CurrentAuthState(Status.loading, null));

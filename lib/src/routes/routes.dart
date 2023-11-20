@@ -1,3 +1,5 @@
+import 'package:bamx_app/src/pages/admin/layout_page.dart';
+import 'package:bamx_app/src/pages/admin/verify_donation.dart';
 import 'package:bamx_app/src/pages/cart_page.dart';
 import 'package:bamx_app/src/pages/donation_confirmation_page.dart';
 import 'package:bamx_app/src/pages/forgot_password.dart';
@@ -22,6 +24,8 @@ class Routes {
   static const String donationConfirmation = '/donationConfirmation';
   static const String twoFactorAuth = '/twoFactorAuth';
   static const String donationInformationPage = '/donationInformationPage';
+  static const String adminHome = '/adminHome';
+  static const String verifyDonation = '/verifyDonation';
   static const String news = '/news';
 
   /// Route generator
@@ -53,6 +57,13 @@ class Routes {
             DonationInformationPage(donationGroup: donationGroup));
       case news:
         return buildRoute(const NewsPage());
+      case adminHome:
+        return buildRoute(const AdminLayout());
+      case verifyDonation:
+        final args = settings.arguments as Map<String, dynamic>;
+        final DonationGroup donationGroup = args['donationGroup'] as DonationGroup;
+        final String userId = args['userId'] as String;
+        return buildRoute(VerifyDonationPage(donationGroup: donationGroup, userId: userId,));
       default:
         throw Exception('La ruta: ${settings.name} no existe');
     }

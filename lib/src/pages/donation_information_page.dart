@@ -6,8 +6,9 @@ import 'package:bamx_app/src/model/donation_group.dart';
 
 class DonationInformationPage extends StatelessWidget {
   final DonationGroup donationGroup;
+  final List<Widget>? children;
 
-  const DonationInformationPage({super.key, required this.donationGroup});
+  const DonationInformationPage({super.key, required this.donationGroup, this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,11 @@ class DonationInformationPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100), // Rounded corners
                 ),
                 child: Text(
-                  donationGroup.donationStatus,
+                  donationGroup.donationStatus[0] == 'p'
+                      ? 'Pendiente'
+                      : donationGroup.donationStatus[0] == 'a'
+                          ? 'Aprobada'
+                          : 'Rechazada',
                   style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -83,6 +88,8 @@ class DonationInformationPage extends StatelessWidget {
                 );
               },
             ),
+            const SizedBox(height: 24),
+            if (children != null) ...children!,
             // Repeat TextDetailRow for each entry
           ],
         ),
@@ -97,11 +104,11 @@ class TextDetailRow extends StatelessWidget {
   final String quantity;
 
   const TextDetailRow({
-    Key? key,
+    super.key,
     required this.title,
     required this.points,
     required this.quantity,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -135,11 +142,11 @@ class TextDetailRow extends StatelessWidget {
 
 Color getStatusColor(String status) {
   switch (status) {
-    case 'Pending':
+    case 'pendientes':
       return MyColors.yellow;
-    case 'Approved':
+    case 'aprobadas':
       return MyColors.green;
-    case 'Rejected':
+    case 'rechazadas':
       return MyColors.primary;
     default:
       return MyColors

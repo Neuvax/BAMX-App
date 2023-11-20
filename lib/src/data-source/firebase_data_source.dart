@@ -73,15 +73,16 @@ class FirebaseDataSource {
     final user = currentUser;
     final cart = await firestore.collection('carts').doc(user.uid).get();
     final cartItems = cart.data()?['items'] as List<dynamic>? ?? [];
-    final itemIndex = cartItems.indexWhere((element) => element['id'] == item.id);
+    final itemIndex =
+        cartItems.indexWhere((element) => element['id'] == item.id);
     if (itemIndex == -1) {
       cartItems.add({
         'id': item.id,
         'cantidad': 1,
       });
-    } else if(cartItems[itemIndex]['cantidad'] == 1){
+    } else if (cartItems[itemIndex]['cantidad'] == 1) {
       cartItems[itemIndex]['cantidad'] = 1;
-    }else {
+    } else {
       cartItems[itemIndex]['cantidad']--;
     }
     await firestore.collection('carts').doc(user.uid).set({
@@ -113,43 +114,160 @@ class FirebaseDataSource {
 
   // Get all current user donations in all the categories
   Stream<UserDonations> getUserDonations() {
-    return firestore
-        .collection('donations')
-        .doc(currentUser.uid)
-        .snapshots()
-        .map((snapshot) {
-      final pendientesData =
-          snapshot.data()?['pendientes'] as Map<String, dynamic>?;
-      final aprobadasData =
-          snapshot.data()?['aprobadas'] as Map<String, dynamic>?;
-      final rechazadasData =
-          snapshot.data()?['rechazadas'] as Map<String, dynamic>?;
-
-      final pendientes =
-          pendientesData != null ? DonationGroup.fromMap(pendientesData) : null;
-      final aprobadas =
-          aprobadasData != null ? DonationGroup.fromMap(aprobadasData) : null;
-      final rechazadas =
-          rechazadasData != null ? DonationGroup.fromMap(rechazadasData) : null;
+    return Stream.fromFuture(Future.wait([
+      firestore
+          .collection('userDonations')
+          .doc(currentUser.uid)
+          .collection('pendientes')
+          .get(),
+      firestore
+          .collection('userDonations')
+          .doc(currentUser.uid)
+          .collection('aprobadas')
+          .get(),
+      firestore
+          .collection('userDonations')
+          .doc(currentUser.uid)
+          .collection('rechazadas')
+          .get(),
+    ]).then((results) {
+      final pendientes = results[0]
+          .docs
+          .map((doc) => DonationGroup.fromMap(doc.id, "Pending", doc.data()))
+          // .where((donation) => donation != null)
+          .cast<DonationGroup>()
+          .toList();
+      final aprobadas = results[1]
+          .docs
+          .map((doc) => DonationGroup.fromMap(doc.id, "Approved", doc.data()))
+          // .where((donation) => donation != null)
+          .cast<DonationGroup>()
+          .toList();
+      final rechazadas = results[2]
+          .docs
+          .map((doc) => DonationGroup.fromMap(doc.id, "Rejected", doc.data()))
+          // .where((donation) => donation != null)
+          .cast<DonationGroup>()
+          .toList();
 
       return UserDonations(
-        pendientes: pendientes != null ? [pendientes] : [],
-        aprobadas: aprobadas != null ? [aprobadas] : [],
-        rechazadas: rechazadas != null ? [rechazadas] : [],
+        pendientes: pendientes,
+        aprobadas: aprobadas,
+        rechazadas: rechazadas,
       );
-    });
+    }));
   }
 
   // Get user pending Donations for Home page quick view
   Stream<Iterable<DonationGroup>> getUserPendingDonations() {
     return firestore
-        .collection('donations')
+        .collection('userDonations')
         .doc(currentUser.uid)
+        .collection('pendientes')
         .snapshots()
         .map((snapshot) {
-      final pendientes = snapshot.data()?['pendientes'] as List<dynamic>? ?? [];
-      return pendientes.map((group) => DonationGroup.fromMap(group)).toList();
+      return snapshot.docs
+          .map((doc) => DonationGroup.fromMap(doc.id, "Pending", doc.data()))
+          .toList();
     });
+  }
+
+  Future<(DonationGroup, String)?> getPublicDonation(String donationId) async {
+    try {
+      // Fetch donation data from the 'donations' collection
+      var donationSnapshot =
+          await firestore.collection('donations').doc(donationId).get();
+      if (!donationSnapshot.exists) {
+        return null; // No donation found with the given ID
+      }
+
+      // Extracting userId and status, with null checks
+      String? userId = donationSnapshot.data()?['userId'];
+      String? status = donationSnapshot.data()?['status'];
+
+      if (userId == null || status == null) {
+        return null; // userId or status is not available
+      }
+
+      // Fetching donation group data from the 'userDonations' collection
+      var donationGroupSnapshot = await firestore
+          .collection('userDonations')
+          .doc(userId)
+          .collection(status)
+          .doc(donationId)
+          .get();
+
+      if (donationGroupSnapshot.exists &&
+          donationGroupSnapshot.data() != null) {
+        // Parse data if available
+        return (
+          DonationGroup.fromMap(
+              donationId, status, donationGroupSnapshot.data()!),
+          userId
+        );
+      } else {
+        return null; // No donation group data found or data is null
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  ///Verify donation
+  ///If the donation is approved, the donation group is moved to the collection "aprobadas"
+  ///If the donation is rejected, the donation group is moved to the collection "rechazadas"
+  ///The user's points are updated
+  Future<void> verifyDonation(
+      DonationGroup donationGroup, String userId, bool isApproved) async {
+    try {
+      // Update donation status
+      await firestore
+          .collection('donations')
+          .doc(donationGroup.donationId)
+          .update({
+        'status': isApproved ? 'aprobadas' : 'rechazadas',
+      });
+
+      // Delete donation group from the 'pendientes' collection
+      await firestore
+          .collection('userDonations')
+          .doc(userId)
+          .collection(donationGroup.donationStatus)
+          .doc(donationGroup.donationId)
+          .delete();
+
+      // Move donation group to the corresponding collection
+      await firestore
+          .collection('userDonations')
+          .doc(userId)
+          .collection(isApproved ? 'aprobadas' : 'rechazadas')
+          .doc(donationGroup.donationId)
+          .set({
+        'donationDate': donationGroup.donationDate.toIso8601String(),
+        'totalPoints': donationGroup.totalPoints,
+        'donationsItems': donationGroup.donationItems
+            .map((item) => {
+                  'name': item.name,
+                  'cantidad': item.cantidad,
+                  'puntos': item.puntos,
+                })
+            .toList(),
+      });
+
+      // Update user points if donation is approved
+      if (isApproved && donationGroup.donationStatus != 'aprobadas') {
+        await firestore.collection('puntos').doc(userId).set({
+          'puntos': FieldValue.increment(donationGroup.totalPoints),
+        }, SetOptions(merge: true));
+      } else if (!isApproved && donationGroup.donationStatus == 'aprobadas') {
+        await firestore.collection('puntos').doc(userId).set({
+          'puntos': FieldValue.increment(-donationGroup.totalPoints),
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      // Handle any exceptions
+      return;
+    }
   }
 
   ///Remove item from user's cart
@@ -165,34 +283,20 @@ class FirebaseDataSource {
     });
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ///Get all the news from the collection "news"
   ///Returns a stream of News
   Stream<Iterable<News>> getNews() {
     return firestore.collection('news').snapshots().map((snapshot) {
       return snapshot.docs
-        .map((doc) => News.fromMap(doc.id, doc.data()))
-        .toList(); // Convert to list
+          .map((doc) => News.fromMap(doc.id, doc.data()))
+          .toList(); // Convert to list
     });
+  }
+
+  ///Get if user is admin
+  Future<bool> getIsAdmin() async {
+    final user = currentUser;
+    final admin = await firestore.collection('admins').doc(user.uid).get();
+    return admin.exists;
   }
 }

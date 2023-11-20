@@ -47,9 +47,13 @@ abstract class AuthRepository {
   /// Signs out
   Future<void> signOut();
 
+  /// Check if user is admin
+  Future<bool> getIsAdmin();
+  
   Future<void> enrollSecondFactor(
       String phoneNumber, Function(String, int?) codeSentCallback);
 
   Future<void> completeSecondFactorEnrollment(
       String verificationId, String smsCode);
 }
+

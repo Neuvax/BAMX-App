@@ -1,4 +1,3 @@
-
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
@@ -13,12 +12,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, CurrentAuthState> (
-      listener: (context, state) {
+    return BlocListener<AuthCubit, CurrentAuthState>(
+      listener: (context, state) async {
         if (state.status == Status.signedOut) {
-          _navigatorKey.currentState?.pushNamedAndRemoveUntil(Routes.login, (_) => false);
-        } else if (state.status == Status.signedIn) {
-          _navigatorKey.currentState?.pushNamedAndRemoveUntil(Routes.home, (_) => false);
+          _navigatorKey.currentState
+              ?.pushNamedAndRemoveUntil(Routes.login, (_) => false);
+        } else {
+          final isAdmin = await context.read<AuthCubit>().isAdmin();
+          if (state.status == Status.signedIn && isAdmin) {
+            _navigatorKey.currentState
+                ?.pushNamedAndRemoveUntil(Routes.adminHome, (_) => false);
+          } else if (state.status == Status.signedIn && !isAdmin) {
+            _navigatorKey.currentState
+                ?.pushNamedAndRemoveUntil(Routes.home, (_) => false);
+          }
         }
       },
       child: MaterialApp(
