@@ -14,7 +14,7 @@ class QRScannerPage extends StatefulWidget {
 class _QRScannerPageState extends State<QRScannerPage> {
   late MobileScannerController cameraController;
   bool isScanning = false;
-  TextEditingController _donationId = TextEditingController();
+  final TextEditingController _donationId = TextEditingController();
 
   @override
   void initState() {
