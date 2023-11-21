@@ -44,6 +44,15 @@ class FirebaseDataSource {
     });
   }
 
+  ///Change the priority of an item by adding 1 or subtracting 1
+  Future<void> changePriority(ItemDonacion item, bool isIncrement) async {
+    final itemData = await firestore.collection('items').doc(item.id).get();
+    final itemPriority = itemData.data()?['prioridad'] as int? ?? 0;
+    await firestore.collection('items').doc(item.id).set({
+      'prioridad': isIncrement ? itemPriority + 1 : itemPriority - 1,
+    });
+  }
+
   ///Add item to user's cart
   ///If the item is already in the cart, increase the quantity
   ///If the item is not in the cart, add it

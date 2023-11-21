@@ -26,6 +26,10 @@ class ListaDonacionesPrioritariasCubit extends Cubit<ListaDonacionesState> {
     await _itemDonacionRepository.addItemToCart(item);
   }
 
+  Future<void> changePriority(ItemDonacion item, bool isIncrement) async {
+    await _itemDonacionRepository.changePriority(item, isIncrement);
+  }
+
   @override
   Future<void> close() {
     _itemsDonacionesSubscription?.cancel();
