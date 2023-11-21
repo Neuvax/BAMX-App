@@ -52,6 +52,7 @@ dependencies:
   flutter_markdown: ^0.6.18+2
   intl: ^0.18.1
   mobile_scanner: ^3.5.2
+  google_maps_flutter: ^2.5.0
 
 dev_dependencies:
   flutter_test:
