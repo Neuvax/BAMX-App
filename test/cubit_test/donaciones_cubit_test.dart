@@ -12,7 +12,7 @@ void main() {
   late MockItemDonacionRepository mockItemDonacionRepository;
 
   setUpAll(() {
-    registerFallbackValue(ItemDonacion(
+    registerFallbackValue(const ItemDonacion(
       id: '1',
       nombre: 'nombre',
       imagen: 'imagen',
@@ -31,7 +31,7 @@ void main() {
     'emits ListaDonacionesState when init is called',
     build: () {
       when(() => mockItemDonacionRepository.getPriorityItems())
-          .thenAnswer((_) => Stream.fromIterable([[ItemDonacion(
+          .thenAnswer((_) => Stream.fromIterable([[const ItemDonacion(
             id: '1',
             nombre: 'nombre',
             imagen: 'imagen',
@@ -42,7 +42,7 @@ void main() {
     },
     act: (cubit) async => await cubit.init(),
     expect: () => [
-      ListaDonacionesState(
+      const ListaDonacionesState(
         isLoading: false,
         listaItemsDonaciones: [ItemDonacion(
           id: '1',
@@ -62,7 +62,7 @@ void main() {
           .thenAnswer((_) async => {});
       return ListaDonacionesPrioritariasCubit();
     },
-    act: (cubit) => cubit.addItemToCart(ItemDonacion(
+    act: (cubit) => cubit.addItemToCart(const ItemDonacion(
       id: '1',
       nombre: 'nombre',
       imagen: 'imagen',
@@ -81,7 +81,7 @@ void main() {
           .thenAnswer((_) async => {});
       return ListaDonacionesCubit();
     },
-    act: (cubit) => cubit.addItemToCart(ItemDonacion(
+    act: (cubit) => cubit.addItemToCart(const ItemDonacion(
       id: '1',
       nombre: 'nombre',
       imagen: 'imagen',
@@ -97,7 +97,7 @@ void main() {
     'emits ListaDonacionesState when init is called',
     build: () {
       when(() => mockItemDonacionRepository.getNormalItems())
-          .thenAnswer((_) => Stream.fromIterable([[ItemDonacion(
+          .thenAnswer((_) => Stream.fromIterable([[const ItemDonacion(
             id: '1',
             nombre: 'nombre',
             imagen: 'imagen',
@@ -108,7 +108,7 @@ void main() {
     },
     act: (cubit) async => await cubit.init(),
     expect: () => [
-      ListaDonacionesState(
+      const ListaDonacionesState(
         isLoading: false,
         listaItemsDonaciones: [ItemDonacion(
           id: '1',

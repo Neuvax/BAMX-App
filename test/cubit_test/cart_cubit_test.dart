@@ -10,7 +10,7 @@ import 'package:mocktail/mocktail.dart';
 class MockCartRepository extends Mock implements CartRepository {}
 
 void main() {
-  registerFallbackValue(ItemDonacion(
+  registerFallbackValue(const ItemDonacion(
     id: '1',
     nombre: 'nombre',
     imagen: 'imagen',
@@ -39,7 +39,7 @@ void main() {
     'emits CartState with cartItems when cartListener is called',
     build: () {
       when(() => mockCartRepository.getUserCart())
-          .thenAnswer((_) => Stream.fromIterable([[CartItem(item: ItemDonacion(
+          .thenAnswer((_) => Stream.fromIterable([[const CartItem(item: ItemDonacion(
           id: '1',
           nombre: 'nombre',
           imagen: 'imagen',
@@ -50,7 +50,7 @@ void main() {
   },
   act: (cubit) async => await cubit.init(),
   expect: () => [
-    CartState(isLoading: false, cartItems: [const CartItem(item: ItemDonacion(
+    const CartState(isLoading: false, cartItems: [CartItem(item: ItemDonacion(
       id: '1',
       nombre: 'nombre',
       imagen: 'imagen',
@@ -63,7 +63,7 @@ void main() {
   blocTest<CartCubit, CartState>(//type 'Null' is not a subtype of type 'Future<void>' of 'function result'
     'addItemToCart calls CartRepository.addItemToCart',
     build: () => CartCubit(),
-    act: (cubit) => cubit.addItemToCart(ItemDonacion(
+    act: (cubit) => cubit.addItemToCart(const ItemDonacion(
       id: '1',
       nombre: 'nombre',
       imagen: 'imagen',
@@ -87,7 +87,7 @@ void main() {
   blocTest<CartCubit, CartState>(//type 'Null' is not a subtype of type 'Future<void>' of 'function result'
     'deleteItemToCart calls CartRepository.deleteItemToCart',
     build: () => CartCubit(),
-    act: (cubit) => cubit.deleteItemToCart(ItemDonacion(
+    act: (cubit) => cubit.deleteItemToCart(const ItemDonacion(
       id: '1',
       nombre: 'nombre',
       imagen: 'imagen',
