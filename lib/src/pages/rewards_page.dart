@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bamx_app/src/utils/colors.dart';
 import 'package:bamx_app/src/cubits/reward_cubit.dart';
 
 class RewardsPage extends StatelessWidget {
@@ -19,11 +20,20 @@ class RewardsPage extends StatelessWidget {
                   itemCount: state.rewards.length,
                   itemBuilder: (context, index) {
                     final reward = state.rewards.elementAt(index);
-                    return ListTile(
-                      leading: Image.network(
-                          reward.imagen), // Assuming this is a network image
-                      title: Text(reward.nombre),
-                      // Add trailing or onTap as needed
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0), // Padding arriba y abajo
+                        child: ListTile(
+                          leading: Image.network(reward.imagen),
+                          title: Text(
+                            reward.nombre,
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
                     );
                   },
                 );
