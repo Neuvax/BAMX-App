@@ -1,5 +1,6 @@
 import 'package:bamx_app/src/model/cart_item.dart';
 import 'package:bamx_app/src/model/donation_group.dart';
+import 'package:bamx_app/src/model/reward.dart';
 import 'package:bamx_app/src/model/user_donations.dart';
 import 'package:bamx_app/src/model/item_donacion.dart';
 import 'package:bamx_app/src/model/news.dart';
@@ -169,6 +170,18 @@ class FirebaseDataSource {
       return snapshot.docs
           .map((doc) => DonationGroup.fromMap(doc.id, "Pending", doc.data()))
           .toList();
+    });
+  }
+
+  // Get user rewards for rewwards page view
+  Stream<Iterable<Reward>> getRewards() {
+    return firestore
+        .collection('userRewards')
+        .doc(currentUser.uid)
+        .collection('rewards')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Reward.fromMap(doc.data())).toList();
     });
   }
 
