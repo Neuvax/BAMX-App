@@ -50,7 +50,9 @@ class CartPage extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        // TODO: Add logic for submitting the cart
+                        // TODO: delete all items
+                        //context.read<CartCubit>().deleteAllItems();
+                        context.read<CartCubit>().cartoToDonation();
                       },
                       child: const Text('Submit'),
                     ),

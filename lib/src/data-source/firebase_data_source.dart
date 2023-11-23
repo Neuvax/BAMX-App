@@ -1,8 +1,10 @@
 import 'package:bamx_app/src/model/cart_item.dart';
+import 'package:bamx_app/src/model/donacion_item.dart';
 import 'package:bamx_app/src/model/donation_group.dart';
 import 'package:bamx_app/src/model/user_donations.dart';
 import 'package:bamx_app/src/model/item_donacion.dart';
 import 'package:bamx_app/src/model/news.dart';
+import 'package:bamx_app/src/pages/historial_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -299,4 +301,63 @@ class FirebaseDataSource {
     final admin = await firestore.collection('admins').doc(user.uid).get();
     return admin.exists;
   }
+
+  //function that erases all the items in the cart
+  Future<void> clearCart() async {
+    final user = currentUser;
+    await firestore.collection('carts').doc(user.uid).set({
+      'items': [],
+    });
+  }
+
+
+  //function that converts a cart item into a DonacionItem
+  //then converts the DonacionItem into a donation group
+  Future<void> createDonationGroup() async {
+    final cartItems = await getUserCart().first;
+    //convert cart items into donation items
+    final donationItems = cartItems
+        .map((item) => DonacionItem(
+          image: '', 
+          name: item.item.nombre, 
+          puntos: item.item.prioridad * item.cantidad, 
+          cantidad: item.cantidad, 
+          ))
+        .toList();
+        var suma = 0;
+        for (var i = 0; i < donationItems.length; i++) {
+          suma += donationItems[i].puntos;
+        } 
+        int totalPoints = suma;
+    final donationGroup = DonationGroup(
+      donationId: '',
+      donationStatus: 'pendientes',
+      totalPoints: totalPoints,
+      donationDate: DateTime.now(),
+      donationItems: donationItems,
+    );
+    final donationGroupData = {
+      'donationDate': donationGroup.donationDate.toIso8601String(),
+      'totalPoints': donationGroup.totalPoints,
+      'donationsItems': donationGroup.donationItems
+          .map((item) => {
+                'name': item.name,
+                'cantidad': item.cantidad,
+                'puntos': item.puntos,
+                'image': item.image,
+              })
+          .toList(),
+    };
+    final donationGroupRef = await firestore
+        .collection('userDonations')
+        .doc(currentUser.uid)
+        .collection('pendientes')
+        .add(donationGroupData);
+    await firestore
+        .collection('donations')
+        .doc(donationGroupRef.id)
+        .set({'userId': currentUser.uid, 'status': 'pendientes'});
+    await clearCart();
+  }
+
 }

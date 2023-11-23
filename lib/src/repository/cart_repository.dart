@@ -6,4 +6,6 @@ abstract class CartRepository {
   Future<void> removeItemFromCart(String itemId);
   Future<void> addItemToCart(ItemDonacion item);
   Future<void> deleteItemToCart(ItemDonacion item);
+  Future<void> deleteAllItems();
+  Future<void> cartoToDonation();
 }
