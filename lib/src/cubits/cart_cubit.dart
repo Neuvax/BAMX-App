@@ -7,8 +7,6 @@ import 'package:bamx_app/src/repository/cart_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
 class CartCubit extends Cubit<CartState> {
   final CartRepository _cartRepository = getIt();
   StreamSubscription? _cartSubscription;

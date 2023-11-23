@@ -3,6 +3,8 @@ import 'package:bamx_app/src/data-source/firebase_data_source.dart';
 import 'package:bamx_app/src/model/cart_item.dart';
 import 'package:bamx_app/src/model/item_donacion.dart';
 import 'package:bamx_app/src/repository/cart_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CartRepositoryImp extends CartRepository {
   final FirebaseDataSource _firebaseDataSource = getIt();
@@ -23,9 +25,7 @@ class CartRepositoryImp extends CartRepository {
   }
 
   @override
-  Future<void> deleteItemToCart(ItemDonacion item) async{
+  Future<void> deleteItemToCart(ItemDonacion item) async {
     return _firebaseDataSource.deleteItemToCart(item);
   }
-
-  
 }

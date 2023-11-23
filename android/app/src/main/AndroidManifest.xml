@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+<uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:label="bamx_app"
         android:name="${applicationName}"
@@ -19,8 +22,6 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-            <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyCW6P5s3Gf55stP_Hbtl6WTBCekkEH1LV8"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -31,5 +32,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyCW6P5s3Gf55stP_Hbtl6WTBCekkEH1LV8"/>
     </application>
 </manifest>
