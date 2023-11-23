@@ -1,6 +1,8 @@
 import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/components/bottom_navigation.dart';
+import 'package:bamx_app/src/utils/upgrader_messages.dart';
 import 'package:flutter/material.dart';
+import 'package:upgrader/upgrader.dart';
 import 'donations_page.dart';
 import 'historial_page.dart';
 import 'home_page.dart';
@@ -20,7 +22,7 @@ class _LayoutPageState extends State<LayoutPage> {
     const HistorialPage(),
     const RewardsPage(),
   ];
-    final _icons = [
+  final _icons = [
     (Icons.home, "Principal"),
     (Icons.favorite_border, "Donaciones"),
     (Icons.history, "Historial"),
@@ -33,12 +35,23 @@ class _LayoutPageState extends State<LayoutPage> {
       _currentIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MyAppBar(),
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigation(currentIndex: _currentIndex, onTap: onBottomTap, icons: _icons,)
+    return UpgradeAlert(
+      upgrader: Upgrader(
+          debugDisplayAlways: true,
+          messages: SpanishMessages(),
+          showLater: false,
+          showIgnore: false),
+      child: Scaffold(
+          appBar: const MyAppBar(),
+          body: _pages[_currentIndex],
+          bottomNavigationBar: BottomNavigation(
+            currentIndex: _currentIndex,
+            onTap: onBottomTap,
+            icons: _icons,
+          )),
     );
   }
 }
