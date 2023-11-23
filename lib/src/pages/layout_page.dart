@@ -40,7 +40,7 @@ class _LayoutPageState extends State<LayoutPage> {
   Widget build(BuildContext context) {
     return UpgradeAlert(
       upgrader: Upgrader(
-          debugDisplayAlways: true,
+          debugDisplayOnce: true,
           messages: SpanishMessages(),
           showLater: false,
           showIgnore: false),
