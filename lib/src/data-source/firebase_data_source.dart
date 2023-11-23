@@ -44,6 +44,24 @@ class FirebaseDataSource {
     });
   }
 
+  ///Get all items from the collection "items"
+  ///Returns a stream of ItemDonacion
+  Stream<Iterable<ItemDonacion>> getAllItems() {
+    return firestore.collection('items').snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => ItemDonacion.fromMap(doc.id, doc.data()))
+          .toList(); // Convert to list
+    });
+  }
+
+  ///Change the priority of an item by adding 1 or subtracting 1
+  Future<void> changePriority(ItemDonacion item, bool isIncrement) async {
+    final itemPriority = item.prioridad;
+    await firestore.collection('items').doc(item.id).update({
+      'prioridad': isIncrement ? itemPriority + 1 : itemPriority - 1,
+    });
+  }
+
   ///Add item to user's cart
   ///If the item is already in the cart, increase the quantity
   ///If the item is not in the cart, add it

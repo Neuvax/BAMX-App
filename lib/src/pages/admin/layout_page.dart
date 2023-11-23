@@ -18,7 +18,7 @@ class _AdminLayoutState extends State<AdminLayout> {
   ];
 
   final _icons = [
-    (Icons.home, "Principal"),
+    (Icons.food_bank, "Donaciones"),
     (Icons.qr_code_scanner, "Escanear")
   ];
 
