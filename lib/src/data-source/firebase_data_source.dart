@@ -5,7 +5,6 @@ import 'package:bamx_app/src/model/reward.dart';
 import 'package:bamx_app/src/model/user_donations.dart';
 import 'package:bamx_app/src/model/item_donacion.dart';
 import 'package:bamx_app/src/model/news.dart';
-import 'package:bamx_app/src/pages/historial_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -24,7 +23,7 @@ class FirebaseDataSource {
   Stream<Iterable<ItemDonacion>> getPriorityItems() {
     return firestore
         .collection('items')
-        .where('prioridad', isGreaterThan: 0)
+        .where('prioridad', isGreaterThan: 1)
         .orderBy('prioridad', descending: true)
         .snapshots()
         .map((snapshot) {
@@ -38,7 +37,7 @@ class FirebaseDataSource {
   Stream<Iterable<ItemDonacion>> getNormalItems() {
     return firestore
         .collection('items')
-        .where('prioridad', isEqualTo: 0)
+        .where('prioridad', isEqualTo: 1)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
