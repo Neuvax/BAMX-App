@@ -248,7 +248,7 @@ class FirebaseDataSource {
   ///Verify donation
   ///If the donation is approved, the donation group is moved to the collection "aprobadas"
   ///If the donation is rejected, the donation group is moved to the collection "rechazadas"
-  ///The user's points are updated
+  ///The user's points are updated and the user's rewards are updated
   Future<void> verifyDonation(
       DonationGroup donationGroup, String userId, bool isApproved) async {
     try {
@@ -291,13 +291,130 @@ class FirebaseDataSource {
         await firestore.collection('puntos').doc(userId).set({
           'puntos': FieldValue.increment(donationGroup.totalPoints),
         }, SetOptions(merge: true));
+
+        //Update user's rewards based on points
+        final userPoints = await firestore
+            .collection('puntos')
+            .doc(userId)
+            .get()
+            .then((value) => value.data()?['puntos']);
+        final userRewardsSnapshot = await firestore
+            .collection('userRewards')
+            .doc(userId)
+            .collection('rewards')
+            .get();
+        final userRewardIds =
+            userRewardsSnapshot.docs.map((doc) => doc.id).toSet();
+
+        final rewardsByPointsSnapshot = await firestore
+            .collection('rewards')
+            .where('minPuntos', isLessThanOrEqualTo: userPoints)
+            .get();
+        final rewardsByPoints = rewardsByPointsSnapshot.docs
+            .where((doc) => !userRewardIds.contains(doc.id))
+            .toList();
+
+        for (var reward in rewardsByPoints) {
+          await firestore
+              .collection('userRewards')
+              .doc(userId)
+              .collection('rewards')
+              .doc(reward.id)
+              .set({
+            'image': reward.data()['image'],
+            'rewardName': reward.data()['rewardName'],
+            'rewardDate': DateTime.now().toIso8601String(),
+          });
+        }
+
+        //Update user's rewards based on number of donations
+        final userDonationsSnapshot = await firestore
+            .collection('userDonations')
+            .doc(userId)
+            .collection('aprobadas')
+            .get();
+        final userDonations =
+            userDonationsSnapshot.docs.map((doc) => doc.id).toSet();
+        final rewardsByDonationsSnapshot = await firestore
+            .collection('rewards')
+            .where('minDonaciones', isLessThanOrEqualTo: userDonations.length)
+            .get();
+        final rewardsByDonations = rewardsByDonationsSnapshot.docs
+            .where((doc) => !userRewardIds.contains(doc.id))
+            .toList();
+
+        for (var reward in rewardsByDonations) {
+          await firestore
+              .collection('userRewards')
+              .doc(userId)
+              .collection('rewards')
+              .doc(reward.id)
+              .set({
+            'image': reward.data()['image'],
+            'rewardName': reward.data()['rewardName'],
+            'rewardDate': DateTime.now().toIso8601String(),
+          });
+        }
       } else if (!isApproved && donationGroup.donationStatus == 'aprobadas') {
         await firestore.collection('puntos').doc(userId).set({
           'puntos': FieldValue.increment(-donationGroup.totalPoints),
         }, SetOptions(merge: true));
+
+        //Update user's rewards based on points
+        final userPoints = await firestore
+            .collection('puntos')
+            .doc(userId)
+            .get()
+            .then((value) => value.data()?['puntos']);
+        final userRewardsSnapshot = await firestore
+            .collection('userRewards')
+            .doc(userId)
+            .collection('rewards')
+            .get();
+        final userRewardIds =
+            userRewardsSnapshot.docs.map((doc) => doc.id).toSet();
+        //Remove rewards that the user can't afford anymore
+        final rewardsByPointsSnapshot = await firestore
+            .collection('rewards')
+            .where('minPuntos', isGreaterThan: userPoints)
+            .get();
+        final rewardsByPoints = rewardsByPointsSnapshot.docs
+            .where((doc) => userRewardIds.contains(doc.id))
+            .toList();
+        for (var reward in rewardsByPoints) {
+          await firestore
+              .collection('userRewards')
+              .doc(userId)
+              .collection('rewards')
+              .doc(reward.id)
+              .delete();
+        }
+
+        //Update user's rewards based on number of donations
+        final userDonationsSnapshot = await firestore
+            .collection('userDonations')
+            .doc(userId)
+            .collection('aprobadas')
+            .get();
+        final userDonations =
+            userDonationsSnapshot.docs.map((doc) => doc.id).toSet();
+        final rewardsByDonationsSnapshot = await firestore
+            .collection('rewards')
+            .where('minDonaciones', isGreaterThan: userDonations.length)
+            .get();
+        final rewardsByDonations = rewardsByDonationsSnapshot.docs
+            .where((doc) => userRewardIds.contains(doc.id))
+            .toList();
+        for (var reward in rewardsByDonations) {
+          await firestore
+              .collection('userRewards')
+              .doc(userId)
+              .collection('rewards')
+              .doc(reward.id)
+              .delete();
+        }
       }
     } catch (e) {
-      // Handle any exceptions
       return;
     }
   }
@@ -340,7 +457,6 @@ class FirebaseDataSource {
     });
   }
 
-
   //function that converts a cart item into a DonacionItem
   //then converts the DonacionItem into a donation group
   Future<void> createDonationGroup() async {
@@ -348,17 +464,17 @@ class FirebaseDataSource {
     //convert cart items into donation items
     final donationItems = cartItems
         .map((item) => DonacionItem(
-          image: '', 
-          name: item.item.nombre, 
-          puntos: item.item.prioridad * item.cantidad, 
-          cantidad: item.cantidad, 
-          ))
+              image: '',
+              name: item.item.nombre,
+              puntos: item.item.prioridad * item.cantidad,
+              cantidad: item.cantidad,
+            ))
         .toList();
-        var suma = 0;
-        for (var i = 0; i < donationItems.length; i++) {
-          suma += donationItems[i].puntos;
-        } 
-        int totalPoints = suma;
+    var suma = 0;
+    for (var i = 0; i < donationItems.length; i++) {
+      suma += donationItems[i].puntos;
+    }
+    int totalPoints = suma;
     final donationGroup = DonationGroup(
       donationId: '',
       donationStatus: 'pendientes',
@@ -389,5 +505,4 @@ class FirebaseDataSource {
         .set({'userId': currentUser.uid, 'status': 'pendientes'});
     await clearCart();
   }
-
 }
