@@ -154,7 +154,7 @@ class CartPage extends StatelessWidget {
                         //context.read<CartCubit>().deleteAllItems();
                         context.read<CartCubit>().cartoToDonation();
                       },
-                      child: const Text('Crear Donación'),
+                      child: const Text('Donar'),
                     ),
                   ),
                   const Padding(
