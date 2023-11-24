@@ -54,6 +54,7 @@ dependencies:
   mobile_scanner: ^3.5.2
   google_maps_flutter: ^2.5.0
   upgrader: ^8.3.0
+  random_avatar: ^0.0.8
 
 dev_dependencies:
   flutter_test:

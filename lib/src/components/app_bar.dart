@@ -2,8 +2,10 @@ import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/cubits/cart_cubit.dart';
 import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({super.key});
@@ -24,6 +26,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
     return BlocProvider(
         create: (context) => CartCubit()..init(),
         child: Container(
@@ -99,12 +102,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (snapshot.data == null) {
-                    return IconButton(
-                      icon: const Icon(Icons.person),
-                      onPressed: () =>
-                          navigateToRoute(context, Routes.userProfile),
-                      color: MyColors.accent,
-                      iconSize: 27.0,
+                    return GestureDetector(
+                      onTap: () => navigateToRoute(context, Routes.userProfile),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        child: RandomAvatar(
+                          auth.currentUser!.uid,
+                          height: 30,
+                          width: 30,
+                        ),
+                      ),
                     );
                   } else {
                     return GestureDetector(
