@@ -121,7 +121,7 @@ class UpdateItemsPage extends StatelessWidget {
                         IconButton(
                           icon: const Icon(Icons.remove),
                           onPressed: () {
-                            if (item.prioridad > 0) {
+                            if (item.prioridad > 1) {
                               context
                                   .read<ListaAdminDonaciones>()
                                   .changePriority(item, false);

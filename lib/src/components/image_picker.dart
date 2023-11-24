@@ -54,10 +54,22 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _pickImage,
-      child: CircleAvatar(
-        radius: 75,
-        backgroundColor: Colors.grey[300],
-        backgroundImage: getImageProvider(),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 75,
+            backgroundColor: Colors.grey[300],
+            backgroundImage: getImageProvider(),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            "Cambiar foto de perfil",
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
