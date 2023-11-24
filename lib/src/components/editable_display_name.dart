@@ -58,11 +58,14 @@ class _EditableDisplayNameState extends State<EditableDisplayName> {
                     controller: _controller,
                   ),
                 )
-              : Text(
-                  _displayName ?? '',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+              : Expanded(
+                  child: Text(
+                    _displayName ?? '',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
           Container(
@@ -74,14 +77,15 @@ class _EditableDisplayNameState extends State<EditableDisplayName> {
               ),
             ),
             child: IconButton(
-              icon: _isEditing
-                  ? const Icon(Icons.check)
-                  : const Icon(Icons.edit),
-              onPressed: _isEditing ? _saveChanges : () {
-                setState(() {
-                  _isEditing = true;
-                });
-              },
+              icon:
+                  _isEditing ? const Icon(Icons.check) : const Icon(Icons.edit),
+              onPressed: _isEditing
+                  ? _saveChanges
+                  : () {
+                      setState(() {
+                        _isEditing = true;
+                      });
+                    },
             ),
           )
         ],
@@ -89,5 +93,3 @@ class _EditableDisplayNameState extends State<EditableDisplayName> {
     );
   }
 }
-
-

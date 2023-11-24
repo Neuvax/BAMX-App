@@ -149,8 +149,12 @@ class CartPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 128.0, vertical: 64.0),
                     child: ElevatedButton(
-                      onPressed: () {/* Lógica de confirmación */},
-                      child: const Text('Confirmar'),
+                      onPressed: () {
+                        // TODO: delete all items
+                        //context.read<CartCubit>().deleteAllItems();
+                        context.read<CartCubit>().cartoToDonation();
+                      },
+                      child: const Text('Crear Donación'),
                     ),
                   ),
                   const Padding(

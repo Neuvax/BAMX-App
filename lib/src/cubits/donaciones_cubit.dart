@@ -60,6 +60,33 @@ class ListaDonacionesCubit extends Cubit<ListaDonacionesState> {
   }
 }
 
+class ListaAdminDonaciones extends Cubit<ListaDonacionesState> {
+  final ItemDonacionRepository _itemDonacionRepository = getIt();
+  StreamSubscription? _itemsDonacionesSubscription;
+
+  ListaAdminDonaciones() : super(const ListaDonacionesState());
+  Future<void> init() async {
+    _itemsDonacionesSubscription = _itemDonacionRepository.getAllItems().listen(donacionesListener);
+  }
+
+  void donacionesListener(Iterable<ItemDonacion> listaItemsDonaciones) {
+    emit(ListaDonacionesState(
+      isLoading: false,
+      listaItemsDonaciones: listaItemsDonaciones,
+    ));
+  }
+
+  Future<void> changePriority(ItemDonacion item, bool isIncrement) async {
+    await _itemDonacionRepository.changePriority(item, isIncrement);
+  }
+
+  @override
+  Future<void> close() {
+    _itemsDonacionesSubscription?.cancel();
+    return super.close();
+  }
+}
+
 class ListaDonacionesState extends Equatable {
   final bool isLoading;
   final Iterable<ItemDonacion> listaItemsDonaciones;

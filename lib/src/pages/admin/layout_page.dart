@@ -2,7 +2,10 @@ import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/components/bottom_navigation.dart';
 import 'package:bamx_app/src/pages/admin/qr_scanner_page.dart';
 import 'package:bamx_app/src/pages/admin/update_items.dart';
+import 'package:bamx_app/src/utils/upgrader_messages.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:upgrader/upgrader.dart';
 
 class AdminLayout extends StatefulWidget {
   const AdminLayout({super.key});
@@ -18,7 +21,7 @@ class _AdminLayoutState extends State<AdminLayout> {
   ];
 
   final _icons = [
-    (Icons.home, "Principal"),
+    (Icons.food_bank, "Donaciones"),
     (Icons.qr_code_scanner, "Escanear")
   ];
 
@@ -31,13 +34,31 @@ class _AdminLayoutState extends State<AdminLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: const MyAppBar(),
-        body: _pages[_currentIndex],
-        bottomNavigationBar: BottomNavigation(
-          currentIndex: _currentIndex,
-          onTap: onBottomTap,
-          icons: _icons,
-        ));
+    if (!kIsWeb) {
+      return UpgradeAlert(
+        upgrader: Upgrader(
+            debugDisplayOnce: true,
+            messages: SpanishMessages(),
+            showLater: false,
+            showIgnore: false),
+        child: Scaffold(
+            appBar: const MyAppBar(),
+            body: _pages[_currentIndex],
+            bottomNavigationBar: BottomNavigation(
+              currentIndex: _currentIndex,
+              onTap: onBottomTap,
+              icons: _icons,
+            )),
+      );
+    } else {
+      return Scaffold(
+          appBar: const MyAppBar(),
+          body: _pages[_currentIndex],
+          bottomNavigationBar: BottomNavigation(
+            currentIndex: _currentIndex,
+            onTap: onBottomTap,
+            icons: _icons,
+          ));
+    }
   }
 }

@@ -36,6 +36,13 @@ class CartCubit extends Cubit<CartState> {
     await _cartRepository.deleteItemToCart(item);
   }
 
+  Future<void> deleteAllItems() async {
+    await _cartRepository.deleteAllItems();
+  }
+  Future<void> cartoToDonation() async {
+    await _cartRepository.cartoToDonation();
+  }
+
   @override
   Future<void> close() {
     _cartSubscription?.cancel();

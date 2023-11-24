@@ -18,7 +18,17 @@ class ItemDonacionRepositoryImp extends ItemDonacionRepository {
   }
 
   @override
+  Stream<Iterable<ItemDonacion>> getAllItems() {
+    return _firebaseDataSource.getAllItems();
+  }
+
+  @override
   Future<void> addItemToCart(ItemDonacion item) {
     return _firebaseDataSource.addItemToCart(item);
+  }
+
+  @override
+  Future<void> changePriority(ItemDonacion item, bool isIncrement) {
+    return _firebaseDataSource.changePriority(item, isIncrement);
   }
 }
