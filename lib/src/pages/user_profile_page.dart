@@ -97,20 +97,25 @@ class UserProfilePage extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context
-                                        .read<AuthCubit>()
-                                        .sendPasswordResetEmail(context
+                                Visibility(
+                                  visible: (firebaseUser
+                                          ?.providerData[0].providerId !=
+                                      'google.com'),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (firebaseUser != null) {
+                                        context
                                             .read<AuthCubit>()
-                                            .getCurrentUserEmail()
-                                            .toString());
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(3.0),
-                                    child: Text(
-                                      'Restablecer Contraseña',
-                                      style: TextStyle(color: Colors.blue),
+                                            .sendPasswordResetEmail(
+                                                firebaseUser.email!);
+                                      }
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(3.0),
+                                      child: Text(
+                                        'Restablecer Contraseña',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
                                     ),
                                   ),
                                 ),
