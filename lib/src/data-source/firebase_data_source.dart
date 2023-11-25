@@ -5,6 +5,7 @@ import 'package:bamx_app/src/model/reward.dart';
 import 'package:bamx_app/src/model/user_donations.dart';
 import 'package:bamx_app/src/model/item_donacion.dart';
 import 'package:bamx_app/src/model/news.dart';
+import 'package:bamx_app/src/model/user_points.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -439,6 +440,18 @@ class FirebaseDataSource {
       return snapshot.docs
           .map((doc) => News.fromMap(doc.id, doc.data()))
           .toList(); // Convert to list
+    });
+  }
+
+  ///Get all the user points from the points collection
+  Stream<UserPoints> getPoints() {
+    final user = currentUser;
+    return firestore
+        .collection('points')
+        .doc(user.uid)
+        .snapshots()
+        .map((snapshot) {
+      return UserPoints.fromMap(snapshot.data()!);
     });
   }
 

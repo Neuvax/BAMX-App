@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bamx_app/src/cubits/reward_cubit.dart';
+import 'package:bamx_app/src/cubits/points_cubit.dart';
 import 'package:intl/intl.dart';
 
 class RewardsPage extends StatelessWidget {
@@ -49,8 +50,7 @@ class RewardsPage extends StatelessWidget {
                                       ),
                                       subtitle: Text(
                                         DateFormat('yyyy-MM-dd').format(
-                                          DateTime.parse(reward.rewardDate)
-                                        ),
+                                            DateTime.parse(reward.rewardDate)),
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                     ),
