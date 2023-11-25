@@ -1,4 +1,3 @@
-import 'package:bamx_app/src/model/user_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bamx_app/src/cubits/reward_cubit.dart';
