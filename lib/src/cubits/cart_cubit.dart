@@ -39,8 +39,8 @@ class CartCubit extends Cubit<CartState> {
   Future<void> deleteAllItems() async {
     await _cartRepository.deleteAllItems();
   }
-  Future<void> cartoToDonation() async {
-    await _cartRepository.cartoToDonation();
+  Future<List<dynamic>> cartoToDonation() async {
+    return await _cartRepository.cartoToDonation();
   }
 
   @override

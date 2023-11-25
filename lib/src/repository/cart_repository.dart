@@ -7,5 +7,5 @@ abstract class CartRepository {
   Future<void> addItemToCart(ItemDonacion item);
   Future<void> deleteItemToCart(ItemDonacion item);
   Future<void> deleteAllItems();
-  Future<void> cartoToDonation();
+  Future<List<dynamic>> cartoToDonation();
 }
