@@ -1,6 +1,7 @@
 import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/components/editable_display_name.dart';
 import 'package:bamx_app/src/components/image_picker.dart';
+import 'package:bamx_app/src/pages/privacy_policy_page.dart';
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
@@ -171,7 +172,11 @@ class UserProfilePage extends StatelessWidget {
                   ),
                   OutlinedButton(
                     onPressed: () {
-                      // Handle the click event for Aviso de Privacidad here
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicyPage()),
+                      );
                     },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.black),
