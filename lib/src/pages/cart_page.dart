@@ -151,12 +151,11 @@ class CartPage extends StatelessWidget {
                         horizontal: 128.0, vertical: 64.0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        await context.read<CartCubit>().cartoToDonation();  
                         List<dynamic> donationInfo = await context.read<CartCubit>().cartoToDonation();
-
                         Navigator.of(context).pushNamed(Routes.donationConfirmation, arguments: {
-                          'donationId': donationInfo[0],
+                          'donationUID': donationInfo[0],
                           'donationCount': donationInfo[2],
+                          'pointsAwarded': donationInfo[1],
                           'status': "Pendiente",
                         });
                       },
