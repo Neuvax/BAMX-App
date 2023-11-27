@@ -447,7 +447,7 @@ class FirebaseDataSource {
   Stream<UserPoints> getPoints() {
     final user = currentUser;
     return firestore
-        .collection('points')
+        .collection('puntos')
         .doc(user.uid)
         .snapshots()
         .map((snapshot) {

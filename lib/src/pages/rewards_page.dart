@@ -35,11 +35,12 @@ class RewardsPage extends StatelessWidget {
             ),
             BlocBuilder<PointsCubit, PointsState>(
               builder: (context, pointsState) {
-                // The type check for PointsState is removed as it's unnecessary
                 if (!pointsState.isLoading) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.only(
+                        left: 8.0, right: 8.0, top: 16.0, bottom: 8.0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         const Text(
                           'Mis Puntos: ',
@@ -59,7 +60,10 @@ class RewardsPage extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return const CircularProgressIndicator();
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  );
                 }
               },
             ),

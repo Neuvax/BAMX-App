@@ -28,12 +28,11 @@ class CartRepositoryImp extends CartRepository {
   }
 
   @override
-  Future<void> deleteAllItems() async{
+  Future<void> deleteAllItems() async {
     return _firebaseDataSource.clearCart();
   }
 
-  Future<void> cartoToDonation() async{
+  Future<void> cartoToDonation() async {
     return _firebaseDataSource.createDonationGroup();
   }
-  
 }

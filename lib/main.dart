@@ -10,8 +10,10 @@ import 'package:bamx_app/src/repository/implementations/item_donacion_repository
 import 'package:bamx_app/src/repository/implementations/donations_repository.dart';
 import 'package:bamx_app/src/repository/implementations/news_repository.dart';
 import 'package:bamx_app/src/repository/implementations/rewards_repository.dart';
+import 'package:bamx_app/src/repository/implementations/points_repository.dart';
 import 'package:bamx_app/src/repository/item_donacion_repository.dart';
 import 'package:bamx_app/src/repository/news_repository.dart';
+import 'package:bamx_app/src/repository/points_repository.dart';
 import 'package:bamx_app/src/repository/rewards_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,5 +47,6 @@ Future<void> injectDependencies() async {
   getIt.registerLazySingleton<DonationRepository>(
       () => DonationsRepositoryImp());
   getIt.registerLazySingleton<NewsRepository>(() => NewsRepositoryImpl());
+  getIt.registerLazySingleton<PointsRepository>(() => PointsRepositoryImpl());
   getIt.registerLazySingleton<RewardsRepository>(() => RewardsRepositoryImpl());
 }
