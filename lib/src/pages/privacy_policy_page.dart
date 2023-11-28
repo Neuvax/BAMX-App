@@ -39,7 +39,11 @@ class PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
             return const Center(child: Text('Error al cargar el archivo PDF'));
           }
         } else {
-          return const CircularProgressIndicator();
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
       },
     );
