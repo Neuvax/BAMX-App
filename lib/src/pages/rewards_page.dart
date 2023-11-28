@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bamx_app/src/cubits/reward_cubit.dart';
 import 'package:bamx_app/src/cubits/points_cubit.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class RewardsPage extends StatelessWidget {
   const RewardsPage({super.key});
@@ -60,9 +61,22 @@ class RewardsPage extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 150,
+                            height: 50,
+                            child: Card(),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 }
               },
