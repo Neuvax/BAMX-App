@@ -96,6 +96,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
           content: Container(
             padding: const EdgeInsets.all(20),
             child: TextField(
+              keyboardType: TextInputType.number,
               onChanged: (value) {
                 smsCode = value;
               },
