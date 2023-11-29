@@ -7,8 +7,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
+
+  @override
+  SignUpPageState createState() => SignUpPageState();
+}
+
+class SignUpPageState extends State<SignUpPage> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  bool passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +28,7 @@ class SignUpPage extends StatelessWidget {
         : Platform.isIOS
             ? "773494367421-422ivqc2pclhjqsgpphp90g2jms4r8u8.apps.googleusercontent.com"
             : "773494367421-oggkhjsdg0b29fgluid0ammb2hnr7tfe.apps.googleusercontent.com";
-    final nameController = TextEditingController();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final confirmPasswordController = TextEditingController();
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -61,6 +69,7 @@ class SignUpPage extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
                         labelText: 'Nombre',
+                        hintText: 'Ingresa tu nombre',
                       ),
                     ),
                     const SizedBox(
@@ -75,6 +84,7 @@ class SignUpPage extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
                         labelText: 'Email',
+                        hintText: 'Ingresa tu email',
                       ),
                     ),
                     const SizedBox(
@@ -82,14 +92,25 @@ class SignUpPage extends StatelessWidget {
                     ),
                     TextField(
                       controller: passwordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
+                      obscureText: !passwordVisible,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 20.0), // Add this
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
                         labelText: 'Contraseña',
+                        hintText: 'Ingresa tu contraseña',
+                        suffixIcon: IconButton(
+                          icon: Icon(passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              passwordVisible = !passwordVisible;
+                            });
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -111,6 +132,7 @@ class SignUpPage extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
                         labelText: 'Confirmar contraseña',
+                        hintText: 'Confirma tu contraseña',
                       ),
                     ),
                     const SizedBox(
