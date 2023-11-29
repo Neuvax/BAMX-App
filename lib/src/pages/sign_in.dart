@@ -8,14 +8,27 @@ import 'package:flutter/material.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
+  SignInPageState createState() => SignInPageState();
+}
 
+class SignInPageState extends State<SignInPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool passwordVisible = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final googleSignInId = kIsWeb
         ? "773494367421-oggkhjsdg0b29fgluid0ammb2hnr7tfe.apps.googleusercontent.com"
         : Platform.isIOS
@@ -63,21 +76,33 @@ class SignInPage extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
                       labelText: 'Email',
+                      hintText: 'Ingresa tu email',
                     ),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   TextField(
-                    obscureText: true,
+                    obscureText: !passwordVisible,
                     controller: passwordController,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 20.0), // Add this
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
                       labelText: 'Contraseña',
+                      hintText: 'Ingresa tu contraseña',
+                      suffixIcon: IconButton(
+                        icon: Icon(passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            passwordVisible = !passwordVisible;
+                          });
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(
