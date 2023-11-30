@@ -8,7 +8,8 @@ class DonationInformationPage extends StatelessWidget {
   final DonationGroup donationGroup;
   final List<Widget>? children;
 
-  const DonationInformationPage({super.key, required this.donationGroup, this.children});
+  const DonationInformationPage(
+      {super.key, required this.donationGroup, this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +84,7 @@ class DonationInformationPage extends StatelessWidget {
                 final donacionItem = donationGroup.donationItems[index];
                 return TextDetailRow(
                   title: donacionItem.name,
-                  points: '${donacionItem.puntos}',
+                  points: '+${donacionItem.puntos} ptos',
                   quantity: '${donacionItem.cantidad}',
                 );
               },

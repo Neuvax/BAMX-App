@@ -1,6 +1,7 @@
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 class TwoFactorAuthPage extends StatelessWidget {
   const TwoFactorAuthPage({super.key});
@@ -16,19 +17,16 @@ class TwoFactorAuthPage extends StatelessWidget {
       ),
       body: BlocListener<AuthCubit, CurrentAuthState>(
         listener: (context, state) {
+          final scaffoldMessenger = ScaffoldMessenger.of(context);
+          scaffoldMessenger.hideCurrentSnackBar();
+
           if (state.status == Status.error && state.errorMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text(state.errorMessage!)),
-              );
+            scaffoldMessenger.showSnackBar(
+              SnackBar(content: Text(state.errorMessage!)),
+            );
           } else if (state.status == Status.success ||
               state.status == Status.codeSent) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text(state.errorMessage!)),
-              );
+            // Aquí puedes poner un mensaje de éxito si es necesario
           }
         },
         child: Padding(
@@ -37,21 +35,37 @@ class TwoFactorAuthPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextField(
-                  controller: phoneNumberController,
-                  decoration: const InputDecoration(
-                    labelText: 'Número de teléfono',
-                    hintText: 'Ejemplo: +52 55 5555 5555',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                  ),
+                Row(
+                  children: <Widget>[
+                    CountryCodePicker(
+                      onChanged: (country) {
+                        // Actualiza el texto del controlador con el código del país
+                        phoneNumberController.text = country.toString();
+                      },
+                      initialSelection: 'MX',
+                      favorite: const ['+52', 'MX'],
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: phoneNumberController,
+                        decoration: const InputDecoration(
+                          labelText: 'Número de teléfono',
+                          hintText: 'Ejemplo: +52 55 5555 5555',
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                        ),
+                        keyboardType: TextInputType.phone,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Start the 2FA setup process
+                    // Inicia el proceso de configuración de 2FA
                     context
                         .read<AuthCubit>()
                         .enrollSecondFactor(phoneNumberController.text);
@@ -72,7 +86,7 @@ class TwoFactorAuthPage extends StatelessWidget {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Complete the 2FA setup process
+                    // Completa el proceso de configuración de 2FA
                     String? verificationId =
                         context.read<AuthCubit>().getVerificationId();
                     context.read<AuthCubit>().verifySecondFactor(
@@ -80,6 +94,7 @@ class TwoFactorAuthPage extends StatelessWidget {
                   },
                   child: const Text('Verificar teléfono'),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
