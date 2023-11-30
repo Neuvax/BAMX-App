@@ -1,4 +1,5 @@
 import 'package:bamx_app/src/components/app_bar.dart';
+import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -79,7 +80,7 @@ class DonationConformationPageUI extends StatelessWidget {
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(Routes.home);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: MyColors.primary,
