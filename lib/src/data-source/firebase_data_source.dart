@@ -472,9 +472,9 @@ class FirebaseDataSource {
 
   //function that converts a cart item into a DonacionItem
   //then converts the DonacionItem into a donation group
-  Future<void> createDonationGroup() async {
+  Future<List<dynamic>> createDonationGroup() async {
     final cartItems = await getUserCart().first;
-    //convert cart items into donation items
+    // Convert cart items into donation items
     final donationItems = cartItems
         .map((item) => DonacionItem(
               image: '',
@@ -483,11 +483,14 @@ class FirebaseDataSource {
               cantidad: item.cantidad,
             ))
         .toList();
+
     var suma = 0;
     for (var i = 0; i < donationItems.length; i++) {
       suma += donationItems[i].puntos;
     }
+
     int totalPoints = suma;
+
     final donationGroup = DonationGroup(
       donationId: '',
       donationStatus: 'pendientes',
@@ -495,6 +498,7 @@ class FirebaseDataSource {
       donationDate: DateTime.now(),
       donationItems: donationItems,
     );
+
     final donationGroupData = {
       'donationDate': donationGroup.donationDate.toIso8601String(),
       'totalPoints': donationGroup.totalPoints,
@@ -507,15 +511,20 @@ class FirebaseDataSource {
               })
           .toList(),
     };
+
     final donationGroupRef = await firestore
         .collection('userDonations')
         .doc(currentUser.uid)
         .collection('pendientes')
         .add(donationGroupData);
+
     await firestore
         .collection('donations')
         .doc(donationGroupRef.id)
         .set({'userId': currentUser.uid, 'status': 'pendientes'});
     await clearCart();
+
+    // Devuelve una lista con los elementos que necesitas
+    return [currentUser.uid, totalPoints, donationItems.length];
   }
 }
