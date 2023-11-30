@@ -1,12 +1,15 @@
 import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/components/editable_display_name.dart';
 import 'package:bamx_app/src/components/image_picker.dart';
+import 'package:bamx_app/src/pages/privacy_policy_page.dart';
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -97,20 +100,25 @@ class UserProfilePage extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context
-                                        .read<AuthCubit>()
-                                        .sendPasswordResetEmail(context
+                                Visibility(
+                                  visible: (firebaseUser
+                                          ?.providerData[0].providerId !=
+                                      'google.com'),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (firebaseUser != null) {
+                                        context
                                             .read<AuthCubit>()
-                                            .getCurrentUserEmail()
-                                            .toString());
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(3.0),
-                                    child: Text(
-                                      'Restablecer Contraseña',
-                                      style: TextStyle(color: Colors.blue),
+                                            .sendPasswordResetEmail(
+                                                firebaseUser.email!);
+                                      }
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(3.0),
+                                      child: Text(
+                                        'Restablecer Contraseña',
+                                        style: TextStyle(color: Colors.blue),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -165,8 +173,24 @@ class UserProfilePage extends StatelessWidget {
                     ),
                   ),
                   OutlinedButton(
-                    onPressed: () {
-                      // Handle the click event for Aviso de Privacidad here
+                    onPressed: () async {
+                      if (kIsWeb) {
+                        // Logica para la versión web: Abre un URL en el navegador
+                        final Uri url = Uri.parse(
+                            'https://drive.google.com/file/d/1DIEgk4ZeNXElGXwy-qsb8JRmKsTPWDN2/view?usp=drive_link');
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      } else {
+                        // Logica para móviles: Usa Navigator para abrir una página interna
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PrivacyPolicyPage()),
+                        );
+                      }
                     },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.black),

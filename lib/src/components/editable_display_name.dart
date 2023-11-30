@@ -60,7 +60,7 @@ class _EditableDisplayNameState extends State<EditableDisplayName> {
                 )
               : Expanded(
                   child: Text(
-                    _displayName ?? '',
+                    _displayName ?? 'Ingrese tu nombre',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

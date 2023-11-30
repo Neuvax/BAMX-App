@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:bamx_app/src/cubits/auth_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 class ImagePickerWidget extends StatefulWidget {
   final String? imageUrl;
@@ -19,6 +21,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   String? _imageUrl;
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -56,11 +59,18 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       onTap: _pickImage,
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 75,
-            backgroundColor: Colors.grey[300],
-            backgroundImage: getImageProvider(),
-          ),
+          if (_imageUrl != null || _imageFile != null)
+            CircleAvatar(
+              radius: 75,
+              backgroundColor: Colors.grey[300],
+              backgroundImage: getImageProvider(),
+            )
+          else
+            RandomAvatar(
+              auth.currentUser!.uid,
+              height: 150,
+              width: 150,
+            ),
           const SizedBox(height: 12),
           const Text(
             "Cambiar foto de perfil",
