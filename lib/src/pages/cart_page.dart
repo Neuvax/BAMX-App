@@ -1,6 +1,7 @@
 import 'package:bamx_app/src/components/app_bar.dart';
 import 'package:bamx_app/src/cubits/cart_cubit.dart';
 import 'package:bamx_app/src/model/item_donacion.dart';
+import 'package:bamx_app/src/routes/routes.dart';
 import 'package:bamx_app/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -149,10 +150,14 @@ class CartPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 128.0, vertical: 64.0),
                     child: ElevatedButton(
-                      onPressed: () {
-                        // TODO: delete all items
-                        //context.read<CartCubit>().deleteAllItems();
-                        context.read<CartCubit>().cartoToDonation();
+                      onPressed: () async {
+                        List<dynamic> donationInfo = await context.read<CartCubit>().cartoToDonation();
+                        Navigator.of(context).pushNamed(Routes.donationConfirmation, arguments: {
+                          'donationUID': donationInfo[0],
+                          'donationCount': donationInfo[2],
+                          'pointsAwarded': donationInfo[1],
+                          'status': "Pendiente",
+                        });
                       },
                       child: const Text('Donar'),
                     ),

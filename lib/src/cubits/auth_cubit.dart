@@ -79,7 +79,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
         return AlertDialog(
           title: const Text('Codigo SMS:'),
           actions: [
-            OutlinedButton(
+            TextButton(
               onPressed: () {
                 smsCode = null;
                 Navigator.of(context).pop();
@@ -96,6 +96,7 @@ class AuthCubit extends Cubit<CurrentAuthState> {
           content: Container(
             padding: const EdgeInsets.all(20),
             child: TextField(
+              keyboardType: TextInputType.number,
               onChanged: (value) {
                 smsCode = value;
               },
